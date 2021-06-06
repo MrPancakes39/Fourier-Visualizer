@@ -1,0 +1,50 @@
+body {
+    padding: 0;
+    margin-top: 2rem;
+    font-family: "Roboto", "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+p {
+    font-size: 1.75rem;
+}
+
+.parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.sliders-container {
+    display: grid;
+    width: 90%;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "c_radius n_terms n_terms c_speed";
+}
+
+.sliders-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#n_terms {
+    width: 90%;
+    grid-area: n_terms;
+}
+
+#n_terms p {
+    font-size: 2.5rem;
+    margin-bottom: 1.2rem;
+}
+
+#c_radius {
+    grid-area: c_radius;
+}
+
+#options {
+    grid-area: c_speed;
+}
