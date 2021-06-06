@@ -19,6 +19,9 @@ function setup() {
     let canvas = createCanvas(width, 400);
     canvas.parent("#sketch-holder");
 
+    /*
+     *   Creates the sliders.
+     */
     numTerms = createP("Number of Terms:");
     termsSlider = createSlider(1, 100, 1, 1);
     numTerms.parent("#n_terms");
@@ -33,6 +36,7 @@ function setup() {
     speedSlider = createSlider(0.5, 5, 1, 0.1);
     speedSlider.parent("#c_speed");
 
+    // Initializes some values.
     θ = 0;
     cx = 300;
     cy = height / 2;
@@ -41,14 +45,17 @@ function setup() {
 function draw() {
     background(218);
 
+    // Updates values based on sliders.
     n = termsSlider.value();
     A = radiusSlider.value();
     speed = speedSlider.value() / (5 * TWO_PI);
     numTerms.html(`Number of Terms: ${n}`);
     offset = 2 * A + 100;
 
+    // Translate to center circle.
     translate(cx, cy);
 
+    // Creates the sum.
     let [x, y] = [0, 0];
     for (let k = 0; k < n; k++) {
         let prevx = x;
@@ -58,8 +65,10 @@ function draw() {
         x += r * cos((2 * k + 1) * θ);
         y += r * sin((2 * k + 1) * θ);
 
+        // Pickes the color for the circles.
         stroke(colorsList[k % colorsList.length]);
 
+        // draws the circles.
         push();
         noFill();
         strokeWeight(2);
@@ -67,11 +76,13 @@ function draw() {
         circle(prevx, prevy, r);
         pop();
 
+        // draws the lines.
         push();
         strokeWeight(3);
         line(prevx, prevy, x, y);
         pop();
 
+        // draws the final circle.
         if (k == n - 1) {
             push();
             fill(0);
@@ -80,11 +91,13 @@ function draw() {
             pop();
         }
     }
+    // appends the y value to list.
     wave.unshift(y);
     if (wave.length > 1200) {
-        wave.pop();
+        wave.pop(); // wave's max size is 1200.
     }
 
+    // draws the wave.
     push();
     noFill();
     beginShape();
@@ -94,6 +107,7 @@ function draw() {
     endShape();
     pop();
 
+    // Draws the line connecting point with wave.
     stroke(0);
     line(x, y, offset, wave[0]);
 
