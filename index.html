@@ -21,7 +21,11 @@
     <link rel="stylesheet" href="./libs/skeleton.css">
     <link rel="stylesheet" href="./main.css">
 
+    <!-- JS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="./libs/p5.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -49,7 +53,11 @@
                     <option value="triangle">Triangle</option>
                 </select>
             </div>
-            <div class="rest"></div>
+            <div class="equation">
+                <p>Equation:</p>
+                <p id="eq">\(E=mc^2\)</p>
+            </div>
+            <div class="custom"></div>
         </div>
     </div>
     <script src="./sketch.js"></script>

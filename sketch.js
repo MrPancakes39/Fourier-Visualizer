@@ -14,13 +14,21 @@ let colors = {
 }
 let colorsList = Object.values(colors);
 
+let eq = document.querySelector("#eq");
 let options = document.querySelector("#presets");
 let presets = {
     "square": ["4*A", "(2*k+1) * PI", "(2*k+1)", "0"],
     "sawtooth": ["2*A", "(k+1) * PI", "(k+1) * PI", "0"],
     "triangle": ["8*A", "pow((2*k+1), 2) * pow(PI, 2)", "(2*k+1)", "HALF_PI"]
 };
+let eqs = {
+    "square": ["\\(\\sum_{k=0}^{\\infty}\\frac{4A}{(2k+1)\\pi}\\sin((2k+1)t)\\)"],
+    "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
+    "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
+};
 let option = options.value;
+eq.textContent = eqs[option];
+MathJax.typeset();
 
 function setup() {
     width = 0.9 * windowWidth;
@@ -50,6 +58,8 @@ function setup() {
         termsSlider.value(1);
         radiusSlider.value(100);
         speedSlider.value(1);
+        eq.textContent = eqs[option];
+        MathJax.typeset();
     };
 
     // Initializes some values.

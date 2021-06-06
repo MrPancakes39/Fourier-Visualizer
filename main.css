@@ -85,16 +85,21 @@ p {
     width: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 0px 0px;
     grid-template-areas:
-        "waves rest rest rest";
+        "waves custom custom custom"
+        "equation custom custom custom";
 }
 
 .waves {
     grid-area: waves;
 }
 
-.rest {
-    grid-area: rest;
+.equation {
+    grid-area: equation;
+}
+
+.custom {
+    grid-area: custom;
 }
