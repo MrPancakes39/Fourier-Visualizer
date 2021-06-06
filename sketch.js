@@ -14,6 +14,22 @@ let colors = {
 }
 let colorsList = Object.values(colors);
 
+let eq = document.querySelector("#eq");
+let options = document.querySelector("#presets");
+let presets = {
+    "square": ["4*A", "(2*k+1) * PI", "(2*k+1)", "0"],
+    "sawtooth": ["2*A", "(k+1) * PI", "(k+1) * PI", "0"],
+    "triangle": ["8*A", "pow((2*k+1), 2) * pow(PI, 2)", "(2*k+1)", "HALF_PI"]
+};
+let eqs = {
+    "square": ["\\(\\sum_{k=0}^{\\infty}\\frac{4A}{(2k+1)\\pi}\\sin((2k+1)t)\\)"],
+    "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
+    "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
+};
+let option = options.value;
+eq.textContent = eqs[option];
+MathJax.typeset();
+
 function setup() {
     width = 0.9 * windowWidth;
     let canvas = createCanvas(width, 400);
@@ -35,6 +51,16 @@ function setup() {
     createP("Speed:").parent("#c_speed");
     speedSlider = createSlider(0.5, 5, 1, 0.1);
     speedSlider.parent("#c_speed");
+
+    options.onchange = () => {
+        wave = [];
+        option = options.value;
+        termsSlider.value(1);
+        radiusSlider.value(100);
+        speedSlider.value(1);
+        eq.textContent = eqs[option];
+        MathJax.typeset();
+    };
 
     // Initializes some values.
     θ = 0;
@@ -61,9 +87,14 @@ function draw() {
         let prevx = x;
         let prevy = y;
 
-        let r = A * (4 / ((2 * k + 1) * PI));
-        x += r * cos((2 * k + 1) * θ);
-        y += r * sin((2 * k + 1) * θ);
+        let num = eval(presets[option][0]);
+        let den = eval(presets[option][1]);
+        let coeff = eval(presets[option][2]);
+        let trig = eval(presets[option][3]);
+
+        let r = num / den;
+        x += r * cos(coeff * θ + trig);
+        y += r * sin(coeff * θ + trig);
 
         // Pickes the color for the circles.
         stroke(colorsList[k % colorsList.length]);
@@ -112,5 +143,4 @@ function draw() {
     line(x, y, offset, wave[0]);
 
     θ -= speed;
-    θ %= TWO_PI;
 }

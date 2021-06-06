@@ -8,6 +8,38 @@ p {
     font-size: 1.75rem;
 }
 
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+
+    0%,
+    100% {
+        transform: rotate(0)
+    }
+
+    20%,
+    60% {
+        transform: rotate(-25deg)
+    }
+
+    40%,
+    80% {
+        transform: rotate(10deg)
+    }
+}
+
+@media (max-width:500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}
+
 .parent {
     display: flex;
     flex-direction: column;
@@ -47,4 +79,27 @@ p {
 
 #options {
     grid-area: c_speed;
+}
+
+.waves-container {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "waves custom custom custom"
+        "equation custom custom custom";
+}
+
+.waves {
+    grid-area: waves;
+}
+
+.equation {
+    grid-area: equation;
+}
+
+.custom {
+    grid-area: custom;
 }
