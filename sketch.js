@@ -28,8 +28,10 @@ let eqs = {
     "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
     "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
 };
-let option = options.val();
-eq.text(eqs[option]);
+let customParms;
+let customOption = false;
+let currentOption = options.val();
+eq.text(eqs[currentOption]);
 
 function setup() {
     width = 0.9 * windowWidth;
@@ -64,9 +66,21 @@ function draw() {
         let prevx = x;
         let prevy = y;
 
-        let amp = eval(presets[option][0]);
-        let freq = eval(presets[option][1]);
-        let phase = eval(presets[option][2]);
+        let amp, freq, phase;
+        if (customOption) {
+            try {
+                amp = eval(customParms.amp);
+                freq = eval(customParms.freq);
+                phase = eval(customParms.phase);
+            } catch (e) {
+                console.error(e);
+                alert("Something went wrong. Try again.");
+            }
+        } else {
+            amp = eval(presets[currentOption][0]);
+            freq = eval(presets[currentOption][1]);
+            phase = eval(presets[currentOption][2]);
+        }
 
         x += amp * cos(freq * t + phase);
         y += amp * sin(freq * t + phase);
@@ -121,13 +135,37 @@ function draw() {
 }
 
 function eventHandlers() {
-    options.change(() => {
+    $("#set-preset").click(() => {
+        if (currentOption != options.val() || customOption) {
+            wave = [];
+            resetSliders();
+            customOption = false;
+            currentOption = options.val();
+            eq.text(eqs[currentOption]);
+            MathJax.typeset();
+        }
+    });
+
+    let form = document.querySelector("#custom-curves");
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const amp = formData.get("amp");
+        const freq = formData.get("freq");
+        const phase = formData.get("phase");
+
+        customParms = {
+            amp,
+            freq,
+            phase
+        };
+
         wave = [];
         resetSliders();
-        option = options.val();
-        eq.text(eqs[option]);
+        customOption = true;
+        eq.text("\\(\\sum_{k=0}^{\\infty}Amp*\\sin(f*t+\\phi)\\)");
         MathJax.typeset();
-    });
+    })
 
     let playBtn = $("#play");
     playBtn.click(() => {

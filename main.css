@@ -50,6 +50,7 @@ p {
 .sliders-container {
     display: grid;
     width: 90%;
+    margin-bottom: 1rem;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr;
     gap: 0px 0px;
@@ -122,7 +123,57 @@ p {
     margin-bottom: 1rem;
 }
 
-.ext-btn button {
+.text-btn button {
     grid-area: btn;
     font-size: 1.3rem;
+}
+
+#set-preset {
+    padding: 0 1.5rem 0;
+    margin-left: 1rem;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-decoration: underline;
+}
+
+.custom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "custom-curves calc-curves";
+}
+
+#custom-curves {
+    grid-area: custom-curves;
+}
+
+.calc-curves {
+    grid-area: calc-curves;
+}
+
+.field-wrapper {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "text input";
+}
+
+.field-wrapper p {
+    grid-area: text;
+}
+
+.field-wrapper input {
+    grid-area: input;
+}
+
+#custom-curves button {
+    width: 100%;
 }
