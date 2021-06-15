@@ -3,6 +3,7 @@ let cx, cy;
 let A, t, n;
 let wave = [];
 
+// Colors used for the circles.
 let colors = {
     red: "#c74440",
     blue: "#2d70b3",
@@ -14,8 +15,9 @@ let colors = {
 }
 let colorsList = Object.values(colors);
 
-let eq = document.querySelector("#eq");
-let options = document.querySelector("#presets");
+// The preset fourier series curves with their equations.
+let eq = $("#eq");
+let options = $("#presets");
 let presets = {
     "square": ["( 4*A ) / ( (2*k+1) * PI )", "(2*k+1)", "0"],
     "sawtooth": ["( 2*A ) / ( (k+1) * PI )", "(k+1) * PI", "0"],
@@ -26,8 +28,8 @@ let eqs = {
     "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
     "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
 };
-let option = options.value;
-eq.textContent = eqs[option];
+let option = options.val();
+eq.text(eqs[option]);
 
 function setup() {
     width = 0.9 * windowWidth;
@@ -51,20 +53,24 @@ function setup() {
     speedSlider = createSlider(0.5, 5, 1, 0.1);
     speedSlider.parent("#c_speed");
 
-    options.onchange = () => {
+    options.change(() => {
         wave = [];
-        option = options.value;
-        termsSlider.value(1);
-        radiusSlider.value(100);
-        speedSlider.value(1);
-        eq.textContent = eqs[option];
+        resetSliders();
+        option = options.val();
+        eq.text(eqs[option]);
         MathJax.typeset();
-    };
+    });
 
     // Initializes some values.
     t = 0;
     cx = 300;
     cy = height / 2;
+}
+
+function resetSliders() {
+    termsSlider.value(1);
+    radiusSlider.value(100);
+    speedSlider.value(1);
 }
 
 function draw() {

@@ -88,18 +88,22 @@ p {
     grid-template-rows: 1fr 1fr;
     gap: 0px 0px;
     grid-template-areas:
-        "waves custom custom custom"
-        "equation custom custom custom";
-}
-
-.waves {
-    grid-area: waves;
+        "waves custom custom options"
+        "equation custom custom options";
 }
 
 .equation {
     grid-area: equation;
 }
 
+.waves {
+    grid-area: waves;
+}
+
 .custom {
     grid-area: custom;
+}
+
+.options {
+    grid-area: options;
 }
