@@ -1,8 +1,9 @@
 let speed;
 let cx, cy;
-let A, θ, n;
+let A, t, n;
 let wave = [];
 
+// Colors used for the circles.
 let colors = {
     red: "#c74440",
     blue: "#2d70b3",
@@ -14,56 +15,34 @@ let colors = {
 }
 let colorsList = Object.values(colors);
 
-let eq = document.querySelector("#eq");
-let options = document.querySelector("#presets");
+// The preset fourier series curves with their equations.
+let eq = $("#eq");
+let options = $("#presets");
 let presets = {
-    "square": ["4*A", "(2*k+1) * PI", "(2*k+1)", "0"],
-    "sawtooth": ["2*A", "(k+1) * PI", "(k+1) * PI", "0"],
-    "triangle": ["8*A", "pow((2*k+1), 2) * pow(PI, 2)", "(2*k+1)", "HALF_PI"]
+    "square": ["( 4*A ) / ( (2*k+1) * PI )", "(2*k+1)", "0"],
+    "sawtooth": ["( 2*A ) / ( (k+1) * PI )", "(k+1) * PI", "0"],
+    "triangle": ["( 8*A ) / ( pow((2*k+1), 2) * pow(PI, 2) )", "(2*k+1)", "HALF_PI"]
 };
 let eqs = {
     "square": ["\\(\\sum_{k=0}^{\\infty}\\frac{4A}{(2k+1)\\pi}\\sin((2k+1)t)\\)"],
     "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
     "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
 };
-let option = options.value;
-eq.textContent = eqs[option];
-MathJax.typeset();
+let customParms;
+let customOption = false;
+let currentOption = options.val();
+eq.text(eqs[currentOption]);
 
 function setup() {
     width = 0.9 * windowWidth;
     let canvas = createCanvas(width, 400);
     canvas.parent("#sketch-holder");
 
-    /*
-     *   Creates the sliders.
-     */
-    numTerms = createP("Number of Terms:");
-    termsSlider = createSlider(1, 100, 1, 1);
-    numTerms.parent("#n_terms");
-    termsSlider.parent("#n_terms");
-    termsSlider.style("width", "100%");
-
-    createP("Radius of Circle:").parent("#c_radius");
-    radiusSlider = createSlider(50, 150, 100, 1);
-    radiusSlider.parent("#c_radius");
-
-    createP("Speed:").parent("#c_speed");
-    speedSlider = createSlider(0.5, 5, 1, 0.1);
-    speedSlider.parent("#c_speed");
-
-    options.onchange = () => {
-        wave = [];
-        option = options.value;
-        termsSlider.value(1);
-        radiusSlider.value(100);
-        speedSlider.value(1);
-        eq.textContent = eqs[option];
-        MathJax.typeset();
-    };
+    makeSliders();
+    eventHandlers();
 
     // Initializes some values.
-    θ = 0;
+    t = 0;
     cx = 300;
     cy = height / 2;
 }
@@ -87,14 +66,24 @@ function draw() {
         let prevx = x;
         let prevy = y;
 
-        let num = eval(presets[option][0]);
-        let den = eval(presets[option][1]);
-        let coeff = eval(presets[option][2]);
-        let trig = eval(presets[option][3]);
+        let amp, freq, phase;
+        if (customOption) {
+            try {
+                amp = eval(customParms.amp);
+                freq = eval(customParms.freq);
+                phase = eval(customParms.phase);
+            } catch (e) {
+                console.error(e);
+                alert("Something went wrong. Try again.");
+            }
+        } else {
+            amp = eval(presets[currentOption][0]);
+            freq = eval(presets[currentOption][1]);
+            phase = eval(presets[currentOption][2]);
+        }
 
-        let r = num / den;
-        x += r * cos(coeff * θ + trig);
-        y += r * sin(coeff * θ + trig);
+        x += amp * cos(freq * t + phase);
+        y += amp * sin(freq * t + phase);
 
         // Pickes the color for the circles.
         stroke(colorsList[k % colorsList.length]);
@@ -104,7 +93,7 @@ function draw() {
         noFill();
         strokeWeight(2);
         ellipseMode(RADIUS);
-        circle(prevx, prevy, r);
+        circle(prevx, prevy, amp);
         pop();
 
         // draws the lines.
@@ -142,5 +131,75 @@ function draw() {
     stroke(0);
     line(x, y, offset, wave[0]);
 
-    θ -= speed;
+    t -= speed;
+}
+
+function eventHandlers() {
+    $("#set-preset").click(() => {
+        if (currentOption != options.val() || customOption) {
+            wave = [];
+            resetSliders();
+            customOption = false;
+            currentOption = options.val();
+            eq.text(eqs[currentOption]);
+            MathJax.typeset();
+        }
+    });
+
+    let form = document.querySelector("#custom-curves");
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const amp = formData.get("amp");
+        const freq = formData.get("freq");
+        const phase = formData.get("phase");
+
+        customParms = {
+            amp,
+            freq,
+            phase
+        };
+
+        wave = [];
+        resetSliders();
+        customOption = true;
+        eq.text("\\(\\sum_{k=0}^{\\infty}Amp*\\sin(f*t+\\phi)\\)");
+        MathJax.typeset();
+    })
+
+    let playBtn = $("#play");
+    playBtn.click(() => {
+        if (playBtn.hasClass(".active")) {
+            loop();
+            playBtn.text("Pause");
+        } else {
+            noLoop();
+            playBtn.text("Play");
+        }
+        playBtn.toggleClass(".active");
+    });
+
+    $("#reset").click(resetSliders);
+}
+
+function makeSliders() {
+    numTerms = createP("Number of Terms:");
+    termsSlider = createSlider(1, 100, 1, 1);
+    numTerms.parent("#n_terms");
+    termsSlider.parent("#n_terms");
+    termsSlider.style("width", "100%");
+
+    createP("Radius of Circle:").parent("#c_radius");
+    radiusSlider = createSlider(50, 150, 100, 1);
+    radiusSlider.parent("#c_radius");
+
+    createP("Speed:").parent("#c_speed");
+    speedSlider = createSlider(0.5, 5, 1, 0.1);
+    speedSlider.parent("#c_speed");
+}
+
+function resetSliders() {
+    termsSlider.value(1);
+    radiusSlider.value(100);
+    speedSlider.value(1);
 }

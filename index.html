@@ -24,6 +24,7 @@
     <!-- JS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="./libs/p5.min.js"></script>
+    <script src="./libs/jquery.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -46,18 +47,48 @@
         </div>
         <div class="waves-container">
             <div class="waves">
-                <p>Waves:</p>
+                <p class="title">Waves:</p>
                 <select id="presets">
                     <option value="square" selected>Square</option>
                     <option value="sawtooth">Sawtooth</option>
                     <option value="triangle">Triangle</option>
                 </select>
+                <button id="set-preset">Set</button>
             </div>
             <div class="equation">
-                <p>Equation:</p>
+                <p class="title">Equation:</p>
                 <p id="eq">\(E=mc^2\)</p>
             </div>
-            <div class="custom"></div>
+            <div class="custom">
+                <form id="custom-curves">
+                    <p class="title">Custom Curve:</p>
+                    <div class="field-wrapper">
+                        <p>Amplitude: </p>
+                        <input name="amp" type="text">
+                    </div>
+                    <div class="field-wrapper">
+                        <p>Frequency: </p>
+                        <input name="freq" type="text">
+                    </div>
+                    <div class="field-wrapper">
+                        <p>Phase: </p>
+                        <input name="phase" type="text">
+                    </div>
+                    <button>Submit</button>
+                </form>
+                <div class="calc-curves"></div>
+            </div>
+            <div class="options">
+                <p class="title">Options:</p>
+                <div class="text-btn">
+                    <p>Play/Pause the sketch: </p>
+                    <button id="play">Pause</button>
+                </div>
+                <div class="text-btn">
+                    <p>Resets the sliders: </p>
+                    <button id="reset">Reset</button>
+                </div>
+            </div>
         </div>
     </div>
     <script src="./sketch.js"></script>
