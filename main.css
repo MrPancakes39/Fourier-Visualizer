@@ -107,3 +107,22 @@ p {
 .options {
     grid-area: options;
 }
+
+.text-btn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "text btn";
+}
+
+.text-btn p {
+    grid-area: text;
+    margin-bottom: 1rem;
+}
+
+.ext-btn button {
+    grid-area: btn;
+    font-size: 1.3rem;
+}

@@ -36,41 +36,13 @@ function setup() {
     let canvas = createCanvas(width, 400);
     canvas.parent("#sketch-holder");
 
-    /*
-     *   Creates the sliders.
-     */
-    numTerms = createP("Number of Terms:");
-    termsSlider = createSlider(1, 100, 1, 1);
-    numTerms.parent("#n_terms");
-    termsSlider.parent("#n_terms");
-    termsSlider.style("width", "100%");
-
-    createP("Radius of Circle:").parent("#c_radius");
-    radiusSlider = createSlider(50, 150, 100, 1);
-    radiusSlider.parent("#c_radius");
-
-    createP("Speed:").parent("#c_speed");
-    speedSlider = createSlider(0.5, 5, 1, 0.1);
-    speedSlider.parent("#c_speed");
-
-    options.change(() => {
-        wave = [];
-        resetSliders();
-        option = options.val();
-        eq.text(eqs[option]);
-        MathJax.typeset();
-    });
+    makeSliders();
+    eventHandlers();
 
     // Initializes some values.
     t = 0;
     cx = 300;
     cy = height / 2;
-}
-
-function resetSliders() {
-    termsSlider.value(1);
-    radiusSlider.value(100);
-    speedSlider.value(1);
 }
 
 function draw() {
@@ -146,4 +118,50 @@ function draw() {
     line(x, y, offset, wave[0]);
 
     t -= speed;
+}
+
+function eventHandlers() {
+    options.change(() => {
+        wave = [];
+        resetSliders();
+        option = options.val();
+        eq.text(eqs[option]);
+        MathJax.typeset();
+    });
+
+    let playBtn = $("#play");
+    playBtn.click(() => {
+        if (playBtn.hasClass(".active")) {
+            loop();
+            playBtn.text("Pause");
+        } else {
+            noLoop();
+            playBtn.text("Play");
+        }
+        playBtn.toggleClass(".active");
+    });
+
+    $("#reset").click(resetSliders);
+}
+
+function makeSliders() {
+    numTerms = createP("Number of Terms:");
+    termsSlider = createSlider(1, 100, 1, 1);
+    numTerms.parent("#n_terms");
+    termsSlider.parent("#n_terms");
+    termsSlider.style("width", "100%");
+
+    createP("Radius of Circle:").parent("#c_radius");
+    radiusSlider = createSlider(50, 150, 100, 1);
+    radiusSlider.parent("#c_radius");
+
+    createP("Speed:").parent("#c_speed");
+    speedSlider = createSlider(0.5, 5, 1, 0.1);
+    speedSlider.parent("#c_speed");
+}
+
+function resetSliders() {
+    termsSlider.value(1);
+    radiusSlider.value(100);
+    speedSlider.value(1);
 }
