@@ -177,3 +177,105 @@ p {
 #custom-curves button {
     width: 100%;
 }
+
+.control-arrows {
+    position: relative;
+    width: 3.6em;
+    height: 3.6em;
+}
+
+.control-arrows::before,
+.control-arrows::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.6em;
+    height: .5em;
+    border-radius: .25em;
+    background-color: #000;
+    -webkit-transition: all .15s ease, background-color .8s ease;
+    transition: all .15s ease, background-color .8s ease;
+    -webkit-transform-origin: .2em 50%;
+    transform-origin: .2em 50%;
+    will-change: transform;
+}
+
+.control-arrows::before {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
+}
+
+.control-arrows::after {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
+}
+
+.control-arrows:hover::before,
+.control-arrows:active::before {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
+}
+
+.control-arrows:hover::after,
+.control-arrows:active::after {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
+}
+
+.control-arrows.left::before,
+.control-arrows.left::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.6em;
+    height: .5em;
+    border-radius: .25em;
+    background-color: currentColor;
+    -webkit-transition: all .15s ease, background-color .8s ease;
+    transition: all .15s ease, background-color .8s ease;
+    -webkit-transform-origin: .2em 50%;
+    transform-origin: .2em 50%;
+    will-change: transform;
+}
+
+.control-arrows.left::before {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
+}
+
+.control-arrows.left::after {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
+}
+
+.control-arrows.left:hover::before,
+.control-arrows.left:active::before {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
+}
+
+.control-arrows.left:hover::after,
+.control-arrows.left:active::after {
+    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
+    transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
+}
+
+.control-arrows.right {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.control-arrows.hover-left {
+    top: 50%;
+    left: 0%;
+    position: absolute;
+}
+
+.control-arrows.right.hover-right {
+    top: 50%;
+    left: 100%;
+    position: absolute;
+    translate: -100%;
+}
