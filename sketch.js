@@ -1,6 +1,6 @@
 let speed;
 let cx, cy;
-let A, θ, n;
+let A, t, n;
 let wave = [];
 
 let colors = {
@@ -17,9 +17,9 @@ let colorsList = Object.values(colors);
 let eq = document.querySelector("#eq");
 let options = document.querySelector("#presets");
 let presets = {
-    "square": ["4*A", "(2*k+1) * PI", "(2*k+1)", "0"],
-    "sawtooth": ["2*A", "(k+1) * PI", "(k+1) * PI", "0"],
-    "triangle": ["8*A", "pow((2*k+1), 2) * pow(PI, 2)", "(2*k+1)", "HALF_PI"]
+    "square": ["( 4*A ) / ( (2*k+1) * PI )", "(2*k+1)", "0"],
+    "sawtooth": ["( 2*A ) / ( (k+1) * PI )", "(k+1) * PI", "0"],
+    "triangle": ["( 8*A ) / ( pow((2*k+1), 2) * pow(PI, 2) )", "(2*k+1)", "HALF_PI"]
 };
 let eqs = {
     "square": ["\\(\\sum_{k=0}^{\\infty}\\frac{4A}{(2k+1)\\pi}\\sin((2k+1)t)\\)"],
@@ -28,7 +28,6 @@ let eqs = {
 };
 let option = options.value;
 eq.textContent = eqs[option];
-MathJax.typeset();
 
 function setup() {
     width = 0.9 * windowWidth;
@@ -63,7 +62,7 @@ function setup() {
     };
 
     // Initializes some values.
-    θ = 0;
+    t = 0;
     cx = 300;
     cy = height / 2;
 }
@@ -87,14 +86,12 @@ function draw() {
         let prevx = x;
         let prevy = y;
 
-        let num = eval(presets[option][0]);
-        let den = eval(presets[option][1]);
-        let coeff = eval(presets[option][2]);
-        let trig = eval(presets[option][3]);
+        let amp = eval(presets[option][0]);
+        let freq = eval(presets[option][1]);
+        let phase = eval(presets[option][2]);
 
-        let r = num / den;
-        x += r * cos(coeff * θ + trig);
-        y += r * sin(coeff * θ + trig);
+        x += amp * cos(freq * t + phase);
+        y += amp * sin(freq * t + phase);
 
         // Pickes the color for the circles.
         stroke(colorsList[k % colorsList.length]);
@@ -104,7 +101,7 @@ function draw() {
         noFill();
         strokeWeight(2);
         ellipseMode(RADIUS);
-        circle(prevx, prevy, r);
+        circle(prevx, prevy, amp);
         pop();
 
         // draws the lines.
@@ -142,5 +139,5 @@ function draw() {
     stroke(0);
     line(x, y, offset, wave[0]);
 
-    θ -= speed;
+    t -= speed;
 }
