@@ -267,13 +267,8 @@ p {
     transform: rotate(180deg);
 }
 
-.control-arrows.hover-left {
-    top: 50%;
-    left: 0%;
-    position: absolute;
-}
-
-.control-arrows.right.hover-right {
+.control-arrows.hover,
+.control-arrows.right.hover {
     top: 50%;
     left: 100%;
     position: absolute;

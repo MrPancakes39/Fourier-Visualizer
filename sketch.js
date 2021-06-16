@@ -2,6 +2,8 @@ let speed;
 let cx, cy;
 let A, t, n;
 let wave = [];
+let waveAmp = [];
+let wavePhase = [];
 
 // Colors used for the circles.
 let colors = {
@@ -41,6 +43,8 @@ function setup() {
     makeSliders();
     eventHandlers();
 
+    $("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
+
     // Initializes some values.
     t = 0;
     cx = 300;
@@ -61,7 +65,10 @@ function draw() {
     translate(cx, cy);
 
     // Creates the sum.
-    let [x, y] = [0, 0];
+    let x = 0,
+        y = 0;
+    waveAmp = [];
+    wavePhase = [];
     for (let k = 0; k < n; k++) {
         let prevx = x;
         let prevy = y;
@@ -75,6 +82,7 @@ function draw() {
             } catch (e) {
                 console.error(e);
                 alert("Something went wrong. Try again.");
+                noLoop();
             }
         } else {
             amp = eval(presets[currentOption][0]);
@@ -82,6 +90,8 @@ function draw() {
             phase = eval(presets[currentOption][2]);
         }
 
+        waveAmp[k] = amp;
+        wavePhase[k] = phase;
         x += amp * cos(freq * t + phase);
         y += amp * sin(freq * t + phase);
 
@@ -160,6 +170,7 @@ function eventHandlers() {
             phase
         };
 
+        loop();
         wave = [];
         resetSliders();
         customOption = true;
@@ -180,6 +191,16 @@ function eventHandlers() {
     });
 
     $("#reset").click(resetSliders);
+
+    $("#right-arrow").click(() => {
+        $("#view-1").animate({ "left": -$("#wrapper").width() });
+        $("#view-2").animate({ "left": 0 });
+    });
+
+    $("#left-arrow").click(() => {
+        $("#view-2").animate({ "left": $("#wrapper").width() });
+        $("#view-1").animate({ "left": 0 });
+    });
 }
 
 function makeSliders() {
@@ -204,14 +225,92 @@ function resetSliders() {
     speedSlider.value(1);
 }
 
-$("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
+let ampSketch = new p5((p) => {
+    p.setup = function() {
+        $("#right-arrow").click();
+        width = 0.9 * windowWidth;
+        let canvas = p.createCanvas(width, 300);
+        canvas.parent("#amp-sketch");
+        canvas.style("margin-bottom", "1.5rem");
+    };
 
-$("#right-arrow").click(() => {
-    $("#view-1").animate({ "left": -$("#wrapper").width() });
-    $("#view-2").animate({ "left": 0 });
+    p.draw = function() {
+        p.background(218);
+        p.translate(20, 280);
+
+        // Draws the axis
+        p.push();
+        p.line(0, 0, p.width - 35, 0);
+        p.line(0, 0, 0, -270);
+        p.fill(0);
+        p.triangle(-10, -250, 0, -270, 10, -250);
+        p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
+        p.pop();
+
+        // Draw The Amplitudes.
+        p.push();
+        p.strokeWeight(4);
+        p.stroke(colors.blue);
+        for (let i = 0; i < waveAmp.length; i++) {
+            let x = p.map(i, 0, waveAmp.length, 0, p.width - 60);
+            p.push();
+            if (waveAmp[i] < 0) {
+                waveAmp[i] *= -1;
+                p.stroke(colors.red);
+            }
+            p.line(x + 10, 0, x + 10, -waveAmp[i]);
+            p.pop();
+        }
+        p.pop();
+    };
 });
 
-$("#left-arrow").click(() => {
-    $("#view-2").animate({ "left": $("#wrapper").width() });
-    $("#view-1").animate({ "left": 0 });
+let phaseSketch = new p5((p) => {
+    p.setup = function() {
+        width = 0.9 * windowWidth;
+        let canvas = p.createCanvas(width, 300);
+        canvas.parent("#phase-sketch");
+    };
+
+    p.draw = function() {
+        p.background(218);
+        p.translate(30, 280);
+
+        // Draws the axis
+        p.push();
+        p.line(0, 0, p.width - 35, 0);
+        p.line(0, 0, 0, -270);
+        p.fill(0);
+        p.triangle(-10, -250, 0, -270, 10, -250);
+        p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
+        p.pop();
+
+        // Draw The Scale
+        p.push();
+        p.line(0, -60, 5, -60);
+        p.line(0, -120, 5, -120);
+        p.line(0, -180, 5, -180);
+        p.line(0, -240, 5, -240);
+
+        p.textSize(18);
+        p.text("π", -20, -65);
+        p.text("_\n2", -20, -62);
+        p.text("π", -20, -115);
+        p.text("3", -25, -185);
+        p.text("π", -13, -173);
+        p.text("_\n2", -25, -182);
+        p.text("2π", -25, -230);
+        p.pop();
+
+        // Draw The Phase Differences.
+        p.push();
+        p.strokeWeight(4);
+        p.stroke(colors.blue);
+        for (let i = 0; i < wavePhase.length; i++) {
+            let x = p.map(i, 0, wavePhase.length, 0, p.width - 60);
+            let y = p.map(wavePhase[i], 0, p.TWO_PI, 0, -240);
+            p.line(x + 10, 0, x + 10, y);
+        }
+        p.pop();
+    };
 });

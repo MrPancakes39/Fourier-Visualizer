@@ -38,64 +38,73 @@
         </svg>
     </a>
     <div id="wrapper">
-        <div id="view-1" class="parent">
+        <div class="parent">
             <h2>Fourier Series Visualizer</h2>
-            <div id="sketch-holder"></div>
-            <div class="sliders-container">
-                <div class="sliders-item" id="c_radius"></div>
-                <div class="sliders-item" id="n_terms"></div>
-                <div class="sliders-item" id="c_speed"></div>
-            </div>
-            <div class="waves-container">
-                <div class="waves">
-                    <p class="title">Waves:</p>
-                    <select id="presets">
-                        <option value="square" selected>Square</option>
-                        <option value="sawtooth">Sawtooth</option>
-                        <option value="triangle">Triangle</option>
-                    </select>
-                    <button id="set-preset">Set</button>
+            <div id="view-1" class="parent">
+                <h2 style="opacity: 0;">Fourier Series Visualizer</h2>
+                <div id="sketch-holder"></div>
+                <div class="sliders-container">
+                    <div class="sliders-item" id="c_radius"></div>
+                    <div class="sliders-item" id="n_terms"></div>
+                    <div class="sliders-item" id="c_speed"></div>
                 </div>
-                <div class="equation">
-                    <p class="title">Equation:</p>
-                    <p id="eq">\(E=mc^2\)</p>
-                </div>
-                <div class="custom">
-                    <form id="custom-curves">
-                        <p class="title">Custom Curve:</p>
-                        <div class="field-wrapper">
-                            <p>Amplitude: </p>
-                            <input name="amp" type="text">
-                        </div>
-                        <div class="field-wrapper">
-                            <p>Frequency: </p>
-                            <input name="freq" type="text">
-                        </div>
-                        <div class="field-wrapper">
-                            <p>Phase: </p>
-                            <input name="phase" type="text">
-                        </div>
-                        <button>Submit</button>
-                    </form>
-                    <div class="calc-curves"></div>
-                </div>
-                <div class="options">
-                    <p class="title">Options:</p>
-                    <div class="text-btn">
-                        <p>Play/Pause the sketch: </p>
-                        <button id="play">Pause</button>
+                <div class="waves-container">
+                    <div class="waves">
+                        <p class="title">Waves:</p>
+                        <select id="presets">
+                            <option value="square" selected>Square</option>
+                            <option value="sawtooth">Sawtooth</option>
+                            <option value="triangle">Triangle</option>
+                        </select>
+                        <button id="set-preset">Set</button>
                     </div>
-                    <div class="text-btn">
-                        <p>Resets the sliders: </p>
-                        <button id="reset">Reset</button>
+                    <div class="equation">
+                        <p class="title">Equation:</p>
+                        <p id="eq">\(E=mc^2\)</p>
+                    </div>
+                    <div class="custom">
+                        <form id="custom-curves">
+                            <p class="title">Custom Curve:</p>
+                            <div class="field-wrapper">
+                                <p>Amplitude: </p>
+                                <input name="amp" type="text">
+                            </div>
+                            <div class="field-wrapper">
+                                <p>Frequency: </p>
+                                <input name="freq" type="text">
+                            </div>
+                            <div class="field-wrapper">
+                                <p>Phase: </p>
+                                <input name="phase" type="text">
+                            </div>
+                            <button>Submit</button>
+                        </form>
+                        <div class="calc-curves"></div>
+                    </div>
+                    <div class="options">
+                        <p class="title">Options:</p>
+                        <div class="text-btn">
+                            <p>Play/Pause the sketch: </p>
+                            <button id="play">Pause</button>
+                        </div>
+                        <div class="text-btn">
+                            <p>Resets the sliders: </p>
+                            <button id="reset">Reset</button>
+                        </div>
                     </div>
                 </div>
+                <div id="right-arrow" class="control-arrows right hover"></div>
             </div>
-            <div id="right-arrow" class="control-arrows right hover-right"></div>
-        </div>
-        <div id="view-2" class="parent">
-            <h2>Fourier Series Visualizer</h2>
-            <div id="left-arrow" class="control-arrows hover-left"></div>
+            <div id="view-2" class="parent">
+                <h2 style="opacity: 0;">Fourier Series Visualizer</h2>
+                <div id="amp-sketch">
+                    <h3>Amplitude Spectrum:</h3>
+                </div>
+                <div id="phase-sketch">
+                    <h3>Phase Spectrum:</h3>
+                </div>
+                <div id="left-arrow" class="control-arrows hover"></div>
+            </div>
         </div>
     </div>
     <script src="./sketch.js"></script>
