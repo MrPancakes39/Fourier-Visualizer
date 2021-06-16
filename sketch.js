@@ -203,3 +203,15 @@ function resetSliders() {
     radiusSlider.value(100);
     speedSlider.value(1);
 }
+
+$("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
+
+$("#right-arrow").click(() => {
+    $("#view-1").animate({ "left": -$("#wrapper").width() });
+    $("#view-2").animate({ "left": 0 });
+});
+
+$("#left-arrow").click(() => {
+    $("#view-2").animate({ "left": $("#wrapper").width() });
+    $("#view-1").animate({ "left": 0 });
+});
