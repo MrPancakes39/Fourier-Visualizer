@@ -227,7 +227,6 @@ function resetSliders() {
 
 let ampSketch = new p5((p) => {
     p.setup = function() {
-        $("#right-arrow").click();
         width = 0.9 * windowWidth;
         let canvas = p.createCanvas(width, 300);
         canvas.parent("#amp-sketch");
