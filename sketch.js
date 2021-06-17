@@ -323,6 +323,79 @@ let phaseSketch = new p5((p) => {
     };
 });
 
+let ftSketch = new p5((p) => {
+    let local_A, local_t, local_speed;
+    let local_cx, local_cy;
+    let local_wave = [];
+    let local_n = 10;
+
+    p.setup = function() {
+        $("#switch-container").click();
+        width = 0.9 * windowWidth;
+        let canvas = p.createCanvas(width, 400);
+        canvas.parent("#ft-sketch");
+
+        local_t = 0;
+        local_A = 100;
+        local_cx = 300;
+        local_cy = height / 2;
+        local_speed = 1 / (5 * TWO_PI);
+    };
+
+    p.draw = function() {
+        p.background(0);
+        p.stroke(255);
+
+        // Translate to center circle.
+        p.translate(local_cx, local_cy);
+
+        let [x, y] = [0, 0];
+        for (let k = 0; k < local_n; k++) {
+            let prevx = x;
+            let prevy = y;
+
+            let r = 4 * local_A / ((2 * k + 1) * p.PI);
+            x += r * p.cos((2 * k + 1) * local_t);
+            y += r * p.sin((2 * k + 1) * local_t);
+
+            // draws the circles.
+            p.push();
+            p.noFill();
+            p.strokeWeight(2);
+            p.ellipseMode(RADIUS);
+            p.circle(prevx, prevy, r);
+            p.pop();
+
+            // draws the lines.
+            p.push();
+            p.strokeWeight(3);
+            p.line(prevx, prevy, x, y);
+            p.pop();
+        }
+
+        // appends the y value to list.
+        local_wave.unshift(y);
+        if (local_wave.length > 1200) {
+            local_wave.pop(); // wave's max size is 1200.
+        }
+
+        let offset = 2 * local_A + 100;
+
+        // draws the wave.
+        p.push();
+        p.noFill();
+        p.line(x, y, offset, y);
+        p.beginShape();
+        for (let i = 0; i < local_wave.length; i++) {
+            p.vertex(i + offset, local_wave[i]);
+        }
+        p.endShape();
+        p.pop();
+
+        local_t -= local_speed;
+    };
+});
+
 function switchTabs() {
     let toggleContainer = $("#toggle-container");
     let toggleNumber = $(this).data("toggleNumber");
@@ -343,6 +416,7 @@ function switchTabs() {
         noLoop();
         ampSketch.noLoop();
         phaseSketch.noLoop();
+        ftSketch.loop();
     } else {
         toggleContainer.css("clipPath", "inset(0 50% 0 0)");
         toggleContainer.css("backgroundColor", "dodgerblue");
@@ -353,5 +427,6 @@ function switchTabs() {
         loop();
         ampSketch.loop();
         phaseSketch.loop();
+        ftSketch.noLoop();
     }
 }
