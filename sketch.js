@@ -44,6 +44,7 @@ function setup() {
     eventHandlers();
 
     $("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
+    $("#switch-container").data("toggleNumber", false);
 
     // Initializes some values.
     t = 0;
@@ -201,6 +202,8 @@ function eventHandlers() {
         $("#view-2").animate({ "left": $("#wrapper").width() });
         $("#view-1").animate({ "left": 0 });
     });
+
+    $("#switch-container").click(switchTabs);
 }
 
 function makeSliders() {
@@ -319,3 +322,36 @@ let phaseSketch = new p5((p) => {
         p.pop();
     };
 });
+
+function switchTabs() {
+    let toggleContainer = $("#toggle-container");
+    let toggleNumber = $(this).data("toggleNumber");
+
+    toggleNumber = !toggleNumber;
+    $(this).data("toggleNumber", toggleNumber);
+
+    let fseries = $("#wrapper");
+    let ftransform = $("#ftransform");
+
+    if (toggleNumber) {
+        toggleContainer.css("clipPath", "inset(0 0 0 50%)");
+        toggleContainer.css("backgroundColor", "dodgerblue");
+
+        fseries.hide();
+        ftransform.show();
+
+        noLoop();
+        ampSketch.noLoop();
+        phaseSketch.noLoop();
+    } else {
+        toggleContainer.css("clipPath", "inset(0 50% 0 0)");
+        toggleContainer.css("backgroundColor", "dodgerblue");
+
+        fseries.show();
+        ftransform.hide();
+
+        loop();
+        ampSketch.loop();
+        phaseSketch.loop();
+    }
+}

@@ -279,6 +279,7 @@ p {
     width: 100%;
     overflow: hidden;
     position: relative;
+    margin-top: 41px;
 }
 
 #view-1 {
@@ -292,4 +293,62 @@ p {
     height: 100%;
     position: fixed;
     display: none;
+}
+
+#switch-container {
+    width: 320px;
+    height: 30px;
+    margin: auto;
+    position: fixed;
+    border-radius: 6px;
+    overflow: hidden;
+    user-select: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.inner-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: inherit;
+    height: inherit;
+    text-transform: uppercase;
+    font-size: .6em;
+    letter-spacing: .2em;
+}
+
+.inner-container:first-child {
+    background: #e9e9e9;
+    color: #a9a9a9;
+}
+
+.inner-container:nth-child(2) {
+    background: dodgerblue;
+    color: white;
+    clip-path: inset(0 50% 0 0);
+    transition: .3s cubic-bezier(0, 0, 0, 1);
+}
+
+.toggle {
+    width: 50%;
+    position: absolute;
+    height: inherit;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.toggle p {
+    margin: auto;
+    font-size: 1.2rem;
+    font-family: 'Asap', sans-serif;
+}
+
+.toggle:nth-child(1) {
+    right: 0;
+}
+
+#fourier-transform {
+    width: 100%;
+    height: 100%;
 }
