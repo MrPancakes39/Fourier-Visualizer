@@ -323,79 +323,6 @@ let phaseSketch = new p5((p) => {
     };
 });
 
-let ftSketch = new p5((p) => {
-    let local_A, local_t, local_speed;
-    let local_cx, local_cy;
-    let local_wave = [];
-    let local_n = 10;
-
-    p.setup = function() {
-        $("#switch-container").click();
-        width = 0.9 * windowWidth;
-        let canvas = p.createCanvas(width, 400);
-        canvas.parent("#ft-sketch");
-
-        local_t = 0;
-        local_A = 100;
-        local_cx = 300;
-        local_cy = height / 2;
-        local_speed = 1 / (5 * TWO_PI);
-    };
-
-    p.draw = function() {
-        p.background(0);
-        p.stroke(255);
-
-        // Translate to center circle.
-        p.translate(local_cx, local_cy);
-
-        let [x, y] = [0, 0];
-        for (let k = 0; k < local_n; k++) {
-            let prevx = x;
-            let prevy = y;
-
-            let r = 4 * local_A / ((2 * k + 1) * p.PI);
-            x += r * p.cos((2 * k + 1) * local_t);
-            y += r * p.sin((2 * k + 1) * local_t);
-
-            // draws the circles.
-            p.push();
-            p.noFill();
-            p.strokeWeight(2);
-            p.ellipseMode(RADIUS);
-            p.circle(prevx, prevy, r);
-            p.pop();
-
-            // draws the lines.
-            p.push();
-            p.strokeWeight(3);
-            p.line(prevx, prevy, x, y);
-            p.pop();
-        }
-
-        // appends the y value to list.
-        local_wave.unshift(y);
-        if (local_wave.length > 1200) {
-            local_wave.pop(); // wave's max size is 1200.
-        }
-
-        let offset = 2 * local_A + 100;
-
-        // draws the wave.
-        p.push();
-        p.noFill();
-        p.line(x, y, offset, y);
-        p.beginShape();
-        for (let i = 0; i < local_wave.length; i++) {
-            p.vertex(i + offset, local_wave[i]);
-        }
-        p.endShape();
-        p.pop();
-
-        local_t -= local_speed;
-    };
-});
-
 function switchTabs() {
     let toggleContainer = $("#toggle-container");
     let toggleNumber = $(this).data("toggleNumber");
@@ -429,4 +356,108 @@ function switchTabs() {
         phaseSketch.loop();
         ftSketch.noLoop();
     }
+}
+
+let ftSketch = new p5((p) => {
+    let local_A, local_t, local_speed;
+    let local_cx, local_cy;
+    let local_wave = [];
+
+    let xt = [];
+    let fourierX;
+
+    p.setup = function() {
+        width = 0.9 * windowWidth;
+        let canvas = p.createCanvas(width, 400);
+        canvas.parent("#ft-sketch");
+
+        local_t = 0;
+        local_A = 100;
+        local_cx = 300;
+        local_cy = height / 2;
+
+        let val = Math.floor(Date.now() / 1000) % 10000;
+        for (let i = 0; i < 200; i++) {
+            xt[i] = p.map(p.noise(val), 0, 1, 20, 200);
+            val += 0.1;
+        }
+        fourierX = dft(xt);
+        p.noLoop();
+    };
+
+    p.draw = function() {
+        p.background(0);
+        p.stroke(255);
+
+        // Translate to center circle.
+        p.translate(local_cx, local_cy);
+
+        let [x, y] = [0, 0];
+        for (let k = 0; k < fourierX.length; k++) {
+            let prevx = x;
+            let prevy = y;
+
+            let { amp, freq, phase } = fourierX[k];
+            x += amp * p.sin(freq * local_t + phase);
+            y += amp * p.cos(freq * local_t + phase);
+
+            // draws the circles.
+            p.push();
+            p.noFill();
+            p.strokeWeight(2);
+            p.ellipseMode(RADIUS);
+            p.circle(prevx, prevy, amp);
+            p.pop();
+
+            // draws the lines.
+            p.push();
+            p.strokeWeight(3);
+            p.line(prevx, prevy, x, y);
+            p.pop();
+        }
+
+        // appends the y value to list.
+        local_wave.unshift(y);
+        if (local_wave.length > 1200) {
+            local_wave.pop(); // wave's max size is 1200.
+        }
+
+        let offset = 2 * local_A + 100;
+
+        // draws the wave.
+        p.push();
+        p.noFill();
+        p.line(x, y, offset, y);
+        p.beginShape();
+        for (let i = 0; i < local_wave.length; i++) {
+            p.vertex(i + offset, local_wave[i]);
+        }
+        p.endShape();
+        p.pop();
+
+        local_speed = p.TWO_PI / fourierX.length;
+        local_t -= local_speed;
+    };
+});
+
+function dft(x) {
+    let X = [];
+    let N = x.length;
+    for (let k = 0; k < N; k++) {
+        let re = 0;
+        let im = 0;
+        for (let n = 0; n < N; n++) {
+            let phi = (TWO_PI * k * n) / N;
+            re += x[n] * cos(phi);
+            im -= x[n] * sin(phi);
+        }
+        re = re / N;
+        im = im / N;
+
+        let freq = k;
+        let amp = sqrt(re * re + im * im);
+        let phase = atan2(im, re);
+        X[k] = { re, im, freq, amp, phase };
+    }
+    return X;
 }
