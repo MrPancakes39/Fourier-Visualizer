@@ -261,6 +261,12 @@ let ampSketch = new p5((p) => {
             p.pop();
         }
         p.pop();
+
+        p.push();
+        p.textSize(18);
+        let str = "Note: This is the Amp = 2|Cn|";
+        p.text(str, p.width - 10 * str.length, -260);
+        p.pop();
     };
 });
 
