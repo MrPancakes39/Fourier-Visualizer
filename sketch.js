@@ -375,10 +375,10 @@ function switchTabs() {
 let ftSketch = new p5((p) => {
     let local_A, local_t, local_speed;
     let local_cx, local_cy;
-    let local_wave = [];
 
     let xt = [];
-    let fourierX;
+    p.fourierX = [];
+    p.local_wave = [];
 
     p.setup = function() {
         width = 0.9 * windowWidth;
@@ -391,7 +391,7 @@ let ftSketch = new p5((p) => {
         local_cy = height / 2;
 
         genSignal(xt);
-        fourierX = dft(xt);
+        p.fourierX = dft(xt);
         p.noLoop();
     };
 
@@ -403,11 +403,11 @@ let ftSketch = new p5((p) => {
         p.translate(local_cx, local_cy);
 
         let [x, y] = [0, 0];
-        for (let k = 0; k < fourierX.length; k++) {
+        for (let k = 0; k < p.fourierX.length; k++) {
             let prevx = x;
             let prevy = y;
 
-            let { amp, freq, phase } = fourierX[k];
+            let { amp, freq, phase } = p.fourierX[k];
             x += amp * p.sin(freq * local_t + phase);
             y += amp * p.cos(freq * local_t + phase);
 
@@ -427,9 +427,9 @@ let ftSketch = new p5((p) => {
         }
 
         // appends the y value to list.
-        local_wave.unshift(y);
-        if (local_wave.length > 1100) {
-            local_wave.pop(); // wave's max size is 1100.
+        p.local_wave.unshift(y);
+        if (p.local_wave.length > 1100) {
+            p.local_wave.pop(); // wave's max size is 1100.
         }
 
         let offset = 2 * local_A + 100;
@@ -439,13 +439,13 @@ let ftSketch = new p5((p) => {
         p.noFill();
         p.line(x, y, offset, y);
         p.beginShape();
-        for (let i = 0; i < local_wave.length; i++) {
-            p.vertex(i + offset, local_wave[i]);
+        for (let i = 0; i < p.local_wave.length; i++) {
+            p.vertex(i + offset, p.local_wave[i]);
         }
         p.endShape();
         p.pop();
 
-        local_speed = p.TWO_PI / fourierX.length;
+        local_speed = p.TWO_PI / p.fourierX.length;
         local_t -= local_speed;
         if (local_t > TWO_PI) {
             local_t = 0;
@@ -484,5 +484,22 @@ function dft(x) {
 }
 
 function setFTPath() {
-    console.log("hi");
+    let input = $("#ft-file-upload")[0];
+    let file = input.files[0];
+    let fr = new FileReader();
+
+    if (!file) {
+        alert("Please select a file before clicking 'Set Path'.");
+    } else if (file.type != "application/json") {
+        alert("Please select a JSON file.");
+    } else {
+        fr.onload = receivedData;
+        fr.readAsText(file);
+    }
+
+    function receivedData() {
+        let drawing = JSON.parse(fr.result);
+        ftSketch.fourierX = dft(drawing);
+        ftSketch.local_wave = [];
+    }
 }
