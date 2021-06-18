@@ -14,6 +14,7 @@
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -30,6 +31,26 @@
 </head>
 
 <body>
+    <div class="parent">
+        <div id="switch-container">
+            <div class="inner-container">
+                <div class="toggle">
+                    <p>Fourier Transform</p>
+                </div>
+                <div class="toggle">
+                    <p>Fourier Series</p>
+                </div>
+            </div>
+            <div class="inner-container" id="toggle-container">
+                <div class="toggle">
+                    <p>Fourier Transform</p>
+                </div>
+                <div class="toggle">
+                    <p>Fourier Series</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="wrapper">
         <div class="parent">
             <h2>Fourier Series Visualizer</h2>
@@ -97,6 +118,30 @@
                     <h3>Phase Spectrum:</h3>
                 </div>
                 <div id="left-arrow" class="control-arrows hover"></div>
+            </div>
+        </div>
+    </div>
+    <div id="ftransform">
+        <div class="parent">
+            <h2>Fourier Transform Visualizer</h2>
+            <div id="ft-sketch"></div>
+            <div class="ft-grid">
+                <div class="ft-equation">
+                    <p class="title">Fourier Transform:</p>
+                    <p>\(\large{X(w)=\int_{-\infty}^{+\infty}x(t)\cdot{e^{-jwt}}dt}\)</p>
+                    <p class="title">Discrete Fourier Transform:</p>
+                    <p>\(\large{X_k =\sum_{n=0}^{N-1}x_n\cdot{e^{-j\frac{2\pi}{N}kn}}}\)</p>
+                </div>
+                <div class="ft-options">
+                    <p class="title">Upload Path:</p>
+                    <label class="file">
+                        <input id="ft-file-upload" type="file" accept="application/json">
+                        <span id="ft-file-text" class="file-custom" data-text="Choose file..."></span>
+                    </label>
+                    <button id="ft-set-path" class="u-full-width">Set Path</button>
+                    <p class="title">Generate Random Signal:</p>
+                    <button id="ft-gen" class="u-full-width">Generate</button>
+                </div>
             </div>
         </div>
     </div>

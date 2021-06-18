@@ -1,3 +1,4 @@
+// ========================================================================================
 let speed;
 let cx, cy;
 let A, t, n;
@@ -30,11 +31,15 @@ let eqs = {
     "sawtooth": ["\\(\\sum_{k=0}^{\\infty}\\frac{2A}{(k+1)\\pi}\\sin((k+1)\\pi t)\\)"],
     "triangle": ["\\(\\sum_{k=0}^{\\infty}\\frac{8A}{(2k+1)^2 \\pi^2}\\cos((2k+1)t)\\)"],
 };
-let customParms;
-let customOption = false;
 let currentOption = options.val();
 eq.text(eqs[currentOption]);
 
+// The variables for custom curve options.
+let customParms;
+let customOption = false;
+
+// ANCHOR: Start of the main sketch.
+// ========================================================================================
 function setup() {
     width = 0.9 * windowWidth;
     let canvas = createCanvas(width, 400);
@@ -43,7 +48,12 @@ function setup() {
     makeSliders();
     eventHandlers();
 
+    /*
+     *  Positions view-2 div to the left of the screen,
+     *  and sets the switch container to Fourier Series tab.
+     */
     $("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
+    $("#switch-container").data("toggleNumber", false);
 
     // Initializes some values.
     t = 0;
@@ -75,6 +85,7 @@ function draw() {
 
         let amp, freq, phase;
         if (customOption) {
+            // If they input custom curve use that instead of presets.
             try {
                 amp = eval(customParms.amp);
                 freq = eval(customParms.freq);
@@ -85,11 +96,13 @@ function draw() {
                 noLoop();
             }
         } else {
+            // Otherwise use the preset selected.
             amp = eval(presets[currentOption][0]);
             freq = eval(presets[currentOption][1]);
             phase = eval(presets[currentOption][2]);
         }
 
+        // Store The Amplitude and Phase.
         waveAmp[k] = amp;
         wavePhase[k] = phase;
         x += amp * cos(freq * t + phase);
@@ -123,8 +136,8 @@ function draw() {
     }
     // appends the y value to list.
     wave.unshift(y);
-    if (wave.length > 1200) {
-        wave.pop(); // wave's max size is 1200.
+    if (wave.length > 1100) {
+        wave.pop(); // wave's max size is 1100.
     }
 
     // draws the wave.
@@ -142,9 +155,16 @@ function draw() {
     line(x, y, offset, wave[0]);
 
     t -= speed;
+    if (t < -TWO_PI) {
+        t = 0;
+    }
 }
+// ========================================================================================
 
+// ANCHOR: Event Handlers Function.
+// ========================================================================================
 function eventHandlers() {
+    // Activates when they press set preset button.
     $("#set-preset").click(() => {
         if (currentOption != options.val() || customOption) {
             wave = [];
@@ -156,6 +176,7 @@ function eventHandlers() {
         }
     });
 
+    // Activates when they submit custom curve.
     let form = document.querySelector("#custom-curves");
     form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -178,6 +199,7 @@ function eventHandlers() {
         MathJax.typeset();
     })
 
+    // Play/Puases the main sketch.
     let playBtn = $("#play");
     playBtn.click(() => {
         if (playBtn.hasClass(".active")) {
@@ -192,6 +214,7 @@ function eventHandlers() {
 
     $("#reset").click(resetSliders);
 
+    // Control Arrows that switch between view-1 and view-2 divs.
     $("#right-arrow").click(() => {
         $("#view-1").animate({ "left": -$("#wrapper").width() });
         $("#view-2").animate({ "left": 0 });
@@ -201,8 +224,33 @@ function eventHandlers() {
         $("#view-2").animate({ "left": $("#wrapper").width() });
         $("#view-1").animate({ "left": 0 });
     });
+
+    $("#switch-container").click(switchTabs);
+
+    // Activates when you upload file.
+    $("#ft-file-upload").change(() => {
+        let file = $("#ft-file-upload").val();
+        let filename = "Choose file...";
+        if (file) {
+            filename = file.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
+        }
+        $("#ft-file-text").attr("data-text", filename);
+    });
+
+    // Activates when you submit the custom path file.
+    $("#ft-set-path").click(setFTPath);
+
+    // Generates a new Noise Signal.
+    $("#ft-gen").click(() => {
+        let xt = [];
+        genSignal(xt);
+        ftSketch.fourierX = dft(xt);
+        ftSketch.local_wave = [];
+        ftSketch.local_t = 0;
+    });
 }
 
+// ========================================================================================
 function makeSliders() {
     numTerms = createP("Number of Terms:");
     termsSlider = createSlider(1, 100, 1, 1);
@@ -224,7 +272,10 @@ function resetSliders() {
     radiusSlider.value(100);
     speedSlider.value(1);
 }
+// ========================================================================================
 
+// ANCHOR: Amplitude Sketch.
+// ========================================================================================
 let ampSketch = new p5((p) => {
     p.setup = function() {
         width = 0.9 * windowWidth;
@@ -261,9 +312,19 @@ let ampSketch = new p5((p) => {
             p.pop();
         }
         p.pop();
+
+        // Draw the note.
+        p.push();
+        p.textSize(18);
+        let str = "Note: This is the Amp = 2|Cn|";
+        p.text(str, p.width - 10 * str.length, -260);
+        p.pop();
     };
 });
+// ========================================================================================
 
+// ANCHOR: Phase Sketch.
+// ========================================================================================
 let phaseSketch = new p5((p) => {
     p.setup = function() {
         width = 0.9 * windowWidth;
@@ -313,3 +374,183 @@ let phaseSketch = new p5((p) => {
         p.pop();
     };
 });
+
+// ========================================================================================
+function switchTabs() {
+    let toggleContainer = $("#toggle-container");
+    let toggleNumber = $(this).data("toggleNumber");
+
+    toggleNumber = !toggleNumber;
+    $(this).data("toggleNumber", toggleNumber);
+
+    let fseries = $("#wrapper");
+    let ftransform = $("#ftransform");
+
+    if (toggleNumber) {
+        // Switches the highlighted part of the switch.
+        toggleContainer.css("clipPath", "inset(0 0 0 50%)");
+        toggleContainer.css("backgroundColor", "dodgerblue");
+
+        fseries.hide();
+        ftransform.show();
+
+        noLoop();
+        ampSketch.noLoop();
+        phaseSketch.noLoop();
+        ftSketch.loop();
+    } else {
+        // Switches the highlighted part of the switch.
+        toggleContainer.css("clipPath", "inset(0 50% 0 0)");
+        toggleContainer.css("backgroundColor", "dodgerblue");
+
+        fseries.show();
+        ftransform.hide();
+
+        loop();
+        ampSketch.loop();
+        phaseSketch.loop();
+        ftSketch.noLoop();
+    }
+}
+// ========================================================================================
+
+// ANCHOR: Fourier Transform Sketch. 
+// ========================================================================================
+let ftSketch = new p5((p) => {
+    let local_A, local_speed;
+    let local_cx, local_cy;
+
+    let xt = [];
+    p.local_t = 0;
+    p.fourierX = [];
+    p.local_wave = [];
+
+    p.setup = function() {
+        width = 0.9 * windowWidth;
+        let canvas = p.createCanvas(width, 400);
+        canvas.parent("#ft-sketch");
+
+        local_t = 0;
+        local_A = 100;
+        local_cx = 300;
+        local_cy = height / 2;
+
+        genSignal(xt);
+        p.fourierX = dft(xt);
+        p.noLoop();
+    };
+
+    p.draw = function() {
+        p.background(0);
+        p.stroke(255);
+
+        // Translate to center circle.
+        p.translate(local_cx, local_cy);
+
+        let [x, y] = [0, 0];
+        for (let k = 0; k < p.fourierX.length; k++) {
+            let prevx = x;
+            let prevy = y;
+
+            let { amp, freq, phase } = p.fourierX[k];
+            x += amp * p.sin(freq * p.local_t + phase);
+            y += amp * p.cos(freq * p.local_t + phase);
+
+            // draws the circles.
+            p.push();
+            p.noFill();
+            p.strokeWeight(2);
+            p.ellipseMode(RADIUS);
+            p.circle(prevx, prevy, amp);
+            p.pop();
+
+            // draws the lines.
+            p.push();
+            p.strokeWeight(3);
+            p.line(prevx, prevy, x, y);
+            p.pop();
+        }
+
+        // appends the y value to list.
+        p.local_wave.unshift(y);
+        if (p.local_wave.length > 1100) {
+            p.local_wave.pop(); // wave's max size is 1100.
+        }
+
+        let offset = 2 * local_A + 100;
+
+        // draws the wave.
+        p.push();
+        p.noFill();
+        p.line(x, y, offset, y);
+        p.beginShape();
+        for (let i = 0; i < p.local_wave.length; i++) {
+            p.vertex(i + offset, p.local_wave[i]);
+        }
+        p.endShape();
+        p.pop();
+
+        local_speed = p.TWO_PI / p.fourierX.length;
+        p.local_t -= local_speed;
+        if (p.local_t < -TWO_PI) {
+            p.local_t = 0;
+        }
+    };
+});
+// ========================================================================================
+
+function genSignal(xt) {
+    noiseSeed(Math.floor(Date.now() / 1000) % 10000);
+    let val = random(0, 1000);
+    for (let i = 0; i < 300; i++) {
+        xt[i] = map(noise(val), 0, 1, -100, 200);
+        val += 0.05;
+    }
+}
+
+// Computes the Discrete Fourier Transform of an Array.
+function dft(x) {
+    let X = [];
+    let N = x.length;
+    for (let k = 0; k < N; k++) {
+        let re = 0;
+        let im = 0;
+        for (let n = 0; n < N; n++) {
+            let phi = (TWO_PI * k * n) / N;
+            re += x[n] * cos(phi);
+            im -= x[n] * sin(phi);
+        }
+        re = re / N;
+        im = im / N;
+
+        let freq = k;
+        let amp = sqrt(re * re + im * im);
+        let phase = atan2(im, re);
+        X[k] = { re, im, freq, amp, phase };
+    }
+    return X;
+}
+
+// Sets The Current Path to Custom Upload Path.
+function setFTPath() {
+    let input = $("#ft-file-upload")[0];
+    let file = input.files[0];
+    let fr = new FileReader();
+
+    if (!file) {
+        alert("Please select a file before clicking 'Set Path'.");
+    } else if (file.type != "application/json") {
+        alert("Please select a JSON file.");
+    } else {
+        fr.onload = receivedData;
+        fr.readAsText(file);
+    }
+
+    function receivedData() {
+        let drawing = JSON.parse(fr.result);
+        ftSketch.fourierX = dft(drawing);
+        ftSketch.local_wave = [];
+        ftSketch.local_t = 0;
+    }
+}
+// ========================================================================================
