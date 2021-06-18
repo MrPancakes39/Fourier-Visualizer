@@ -8,6 +8,7 @@ p {
     font-size: 1.75rem;
 }
 
+/*  CSS For Github Corner   */
 .github-corner:hover .octo-arm {
     animation: octocat-wave 560ms ease-in-out
 }
@@ -178,6 +179,10 @@ p {
     width: 100%;
 }
 
+/*
+ *  Adapted from
+ *  ("slides.com" / revealjs)'s Control Arrows
+ */
 .control-arrows {
     position: relative;
     width: 3.6em;
@@ -240,6 +245,10 @@ p {
     transform: translate(-100%) rotate(180deg);
 }
 
+/*
+ *  Adapted from
+ *  "https://stackoverflow.com/a/5028650/12216623"
+ */
 #wrapper {
     width: 100%;
     overflow: hidden;
@@ -339,6 +348,10 @@ p {
     grid-area: ft-options;
 }
 
+/*
+ *  Adapted from "WTF, forms?"
+ *  http://wtfforms.com
+ */
 .file {
     position: relative;
     display: block;
