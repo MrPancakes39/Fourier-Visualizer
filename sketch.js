@@ -124,8 +124,8 @@ function draw() {
     }
     // appends the y value to list.
     wave.unshift(y);
-    if (wave.length > 1200) {
-        wave.pop(); // wave's max size is 1200.
+    if (wave.length > 1100) {
+        wave.pop(); // wave's max size is 1100.
     }
 
     // draws the wave.
@@ -143,6 +143,9 @@ function draw() {
     line(x, y, offset, wave[0]);
 
     t -= speed;
+    if (t > TWO_PI) {
+        t = 0;
+    }
 }
 
 function eventHandlers() {
@@ -376,11 +379,7 @@ let ftSketch = new p5((p) => {
         local_cx = 300;
         local_cy = height / 2;
 
-        let val = Math.floor(Date.now() / 1000) % 10000;
-        for (let i = 0; i < 200; i++) {
-            xt[i] = p.map(p.noise(val), 0, 1, 20, 200);
-            val += 0.1;
-        }
+        genSignal(xt);
         fourierX = dft(xt);
         p.noLoop();
     };
@@ -418,8 +417,8 @@ let ftSketch = new p5((p) => {
 
         // appends the y value to list.
         local_wave.unshift(y);
-        if (local_wave.length > 1200) {
-            local_wave.pop(); // wave's max size is 1200.
+        if (local_wave.length > 1100) {
+            local_wave.pop(); // wave's max size is 1100.
         }
 
         let offset = 2 * local_A + 100;
@@ -437,6 +436,9 @@ let ftSketch = new p5((p) => {
 
         local_speed = p.TWO_PI / fourierX.length;
         local_t -= local_speed;
+        if (local_t > TWO_PI) {
+            local_t = 0;
+        }
     };
 });
 
@@ -460,4 +462,12 @@ function dft(x) {
         X[k] = { re, im, freq, amp, phase };
     }
     return X;
+}
+
+function genSignal(xt) {
+    let val = Math.floor(Date.now() / 1000) % 10000;
+    for (let i = 0; i < 300; i++) {
+        xt[i] = map(noise(val), 0, 1, -100, 200);
+        val += 0.05;
+    }
 }
