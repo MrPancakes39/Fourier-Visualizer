@@ -354,3 +354,22 @@ p {
     display: none;
     margin-top: 41px;
 }
+
+.ft-grid {
+    width: 90%;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 25% 25%;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "ft-equation ft-options";
+}
+
+.ft-equation {
+    grid-area: ft-equation;
+}
+
+.ft-options {
+    grid-area: ft-options;
+}
