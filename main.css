@@ -223,56 +223,21 @@ p {
     transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
 }
 
-.control-arrows.left::before,
-.control-arrows.left::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2.6em;
-    height: .5em;
-    border-radius: .25em;
-    background-color: currentColor;
-    -webkit-transition: all .15s ease, background-color .8s ease;
-    transition: all .15s ease, background-color .8s ease;
-    -webkit-transform-origin: .2em 50%;
-    transform-origin: .2em 50%;
-    will-change: transform;
-}
-
-.control-arrows.left::before {
-    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
-    transform: translateX(0.5em) translateY(1.55em) rotate(45deg);
-}
-
-.control-arrows.left::after {
-    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
-    transform: translateX(0.5em) translateY(1.55em) rotate(-45deg);
-}
-
-.control-arrows.left:hover::before,
-.control-arrows.left:active::before {
-    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
-    transform: translateX(0.5em) translateY(1.55em) rotate(40deg);
-}
-
-.control-arrows.left:hover::after,
-.control-arrows.left:active::after {
-    -webkit-transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
-    transform: translateX(0.5em) translateY(1.55em) rotate(-40deg);
-}
-
+.control-arrows,
 .control-arrows.right {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-}
-
-.control-arrows.hover,
-.control-arrows.right.hover {
     top: 50%;
     left: 100%;
     position: absolute;
-    translate: -100%;
+}
+
+.control-arrows {
+    -webkit-transform: translate(-100%);
+    transform: translate(-100%);
+}
+
+.control-arrows.right {
+    -webkit-transform: translate(-100%) rotate(180deg);
+    transform: translate(-100%) rotate(180deg);
 }
 
 #wrapper {
