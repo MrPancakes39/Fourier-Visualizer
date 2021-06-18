@@ -207,6 +207,17 @@ function eventHandlers() {
     });
 
     $("#switch-container").click(switchTabs);
+
+    $("#ft-file-upload").change(() => {
+        let file = $("#ft-file-upload").val();
+        let filename = "Choose file...";
+        if (file) {
+            filename = file.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
+        }
+        $("#ft-file-text").attr("data-text", filename);
+    });
+
+    $("#ft-set-path").click(setFTPath);
 }
 
 function makeSliders() {
@@ -442,6 +453,14 @@ let ftSketch = new p5((p) => {
     };
 });
 
+function genSignal(xt) {
+    let val = Math.floor(Date.now() / 1000) % 10000;
+    for (let i = 0; i < 300; i++) {
+        xt[i] = map(noise(val), 0, 1, -100, 200);
+        val += 0.05;
+    }
+}
+
 function dft(x) {
     let X = [];
     let N = x.length;
@@ -464,10 +483,6 @@ function dft(x) {
     return X;
 }
 
-function genSignal(xt) {
-    let val = Math.floor(Date.now() / 1000) % 10000;
-    for (let i = 0; i < 300; i++) {
-        xt[i] = map(noise(val), 0, 1, -100, 200);
-        val += 0.05;
-    }
+function setFTPath() {
+    console.log("hi");
 }
