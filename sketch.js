@@ -143,7 +143,7 @@ function draw() {
     line(x, y, offset, wave[0]);
 
     t -= speed;
-    if (t > TWO_PI) {
+    if (t < -TWO_PI) {
         t = 0;
     }
 }
@@ -218,6 +218,13 @@ function eventHandlers() {
     });
 
     $("#ft-set-path").click(setFTPath);
+    $("#ft-gen").click(() => {
+        let xt = [];
+        genSignal(xt);
+        ftSketch.fourierX = dft(xt);
+        ftSketch.local_wave = [];
+        ftSketch.local_t = 0;
+    });
 }
 
 function makeSliders() {
@@ -373,10 +380,11 @@ function switchTabs() {
 }
 
 let ftSketch = new p5((p) => {
-    let local_A, local_t, local_speed;
+    let local_A, local_speed;
     let local_cx, local_cy;
 
     let xt = [];
+    p.local_t = 0;
     p.fourierX = [];
     p.local_wave = [];
 
@@ -408,8 +416,8 @@ let ftSketch = new p5((p) => {
             let prevy = y;
 
             let { amp, freq, phase } = p.fourierX[k];
-            x += amp * p.sin(freq * local_t + phase);
-            y += amp * p.cos(freq * local_t + phase);
+            x += amp * p.sin(freq * p.local_t + phase);
+            y += amp * p.cos(freq * p.local_t + phase);
 
             // draws the circles.
             p.push();
@@ -446,15 +454,16 @@ let ftSketch = new p5((p) => {
         p.pop();
 
         local_speed = p.TWO_PI / p.fourierX.length;
-        local_t -= local_speed;
-        if (local_t > TWO_PI) {
-            local_t = 0;
+        p.local_t -= local_speed;
+        if (p.local_t < -TWO_PI) {
+            p.local_t = 0;
         }
     };
 });
 
 function genSignal(xt) {
-    let val = Math.floor(Date.now() / 1000) % 10000;
+    noiseSeed(Math.floor(Date.now() / 1000) % 10000);
+    let val = random(0, 1000);
     for (let i = 0; i < 300; i++) {
         xt[i] = map(noise(val), 0, 1, -100, 200);
         val += 0.05;
@@ -501,5 +510,6 @@ function setFTPath() {
         let drawing = JSON.parse(fr.result);
         ftSketch.fourierX = dft(drawing);
         ftSketch.local_wave = [];
+        ftSketch.local_t = 0;
     }
 }
