@@ -288,13 +288,22 @@ let ampSketch = new p5((p) => {
         p.background(218);
         p.translate(20, 280);
 
-        // Draws the axis
+        // Draw The Axis.
         p.push();
         p.line(0, 0, p.width - 35, 0);
         p.line(0, 0, 0, -270);
         p.fill(0);
         p.triangle(-10, -250, 0, -270, 10, -250);
         p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
+        p.pop();
+
+        // Draw The Units.
+        p.push();
+        p.textSize(18);
+        p.text("2|C |", 15, -254);
+        p.text("f", p.width - 56, -15);
+        p.textSize(12);
+        p.text("n", 46, -250);
         p.pop();
 
         // Draw The Amplitudes.
@@ -313,7 +322,7 @@ let ampSketch = new p5((p) => {
         }
         p.pop();
 
-        // Draw the note.
+        // Draw The Note.
         p.push();
         p.textSize(18);
         let str = "Note: This is the Amp = 2|Cn|";
@@ -336,7 +345,7 @@ let phaseSketch = new p5((p) => {
         p.background(218);
         p.translate(30, 280);
 
-        // Draws the axis
+        // Draw The Axis.
         p.push();
         p.line(0, 0, p.width - 35, 0);
         p.line(0, 0, 0, -270);
@@ -345,7 +354,7 @@ let phaseSketch = new p5((p) => {
         p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
         p.pop();
 
-        // Draw The Scale
+        // Draw The Scale.
         p.push();
         p.line(0, -60, 5, -60);
         p.line(0, -120, 5, -120);
@@ -360,6 +369,15 @@ let phaseSketch = new p5((p) => {
         p.text("π", -13, -173);
         p.text("_\n2", -25, -182);
         p.text("2π", -25, -230);
+        p.pop();
+
+        // Draw The Units.
+        p.push();
+        p.textSize(18);
+        p.text("ϕ", 15, -254);
+        p.text("f", p.width - 56, -15);
+        p.textSize(12);
+        p.text("n", 28, -249);
         p.pop();
 
         // Draw The Phase Differences.
