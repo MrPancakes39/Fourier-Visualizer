@@ -329,7 +329,8 @@ p {
     margin-top: 41px;
 }
 
-.ft-grid {
+.ft-grid,
+.ft-sketches {
     width: 90%;
     display: grid;
     grid-auto-columns: 1fr;
@@ -340,12 +341,18 @@ p {
         "ft-equation ft-options";
 }
 
-.ft-equation {
+.ft-equation,
+#ft-ampSketch {
     grid-area: ft-equation;
 }
 
-.ft-options {
+.ft-options,
+#ft-phaseSketch {
     grid-area: ft-options;
+}
+
+.ft-sketches {
+    grid-template-columns: 1fr 1fr;
 }
 
 /*
