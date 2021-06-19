@@ -248,6 +248,8 @@ function eventHandlers() {
         ftSketch.fourierX = dft(xt);
         ftSketch.local_wave = [];
         ftSketch.local_t = 0;
+        ftAmpSketch.loop();
+        ftPhaseSketch.loop();
     });
 }
 
@@ -448,7 +450,7 @@ let ftSketch = new p5((p) => {
         width = 0.9 * windowWidth;
         let canvas = p.createCanvas(width, 300);
         canvas.parent("#ft-sketch");
-        canvas.style("margin-bottom", "1.2rem");
+        canvas.style("margin-bottom", "1rem");
 
         local_t = 0;
         local_A = 80;
@@ -462,7 +464,6 @@ let ftSketch = new p5((p) => {
         }
         p.fourierX = dft(xt);
         p.noLoop();
-        $("#switch-container").click();
     };
 
     p.draw = function() {
@@ -498,8 +499,8 @@ let ftSketch = new p5((p) => {
 
         // appends the y value to list.
         p.local_wave.unshift(y);
-        if (p.local_wave.length > 1100) {
-            p.local_wave.pop(); // wave's max size is 1100.
+        if (p.local_wave.length > 1200) {
+            p.local_wave.pop(); // wave's max size is 1200.
         }
 
         let offset = 2 * local_A + 100;
@@ -576,6 +577,8 @@ function setFTPath() {
         ftSketch.fourierX = dft(drawing);
         ftSketch.local_wave = [];
         ftSketch.local_t = 0;
+        ftAmpSketch.loop();
+        ftPhaseSketch.loop();
     }
 }
 // ========================================================================================
@@ -587,7 +590,7 @@ let ftAmpSketch = new p5((p) => {
         width = 0.425 * windowWidth;
         let canvas = p.createCanvas(width, 250);
         canvas.parent("#ft-ampSketch");
-        canvas.style("margin-bottom", "1.2rem");
+        canvas.style("margin-bottom", "1rem");
     };
     p.draw = function() {
         p.background(0);
@@ -619,6 +622,8 @@ let ftAmpSketch = new p5((p) => {
         let initial = p.map(amps[0], minAmp, maxAmp, 0, p.height - 100);
         p.line(0, 0, 0, -initial);
         p.pop();
+
+        p.noLoop();
     }
 });
 // ========================================================================================
@@ -630,7 +635,6 @@ let ftPhaseSketch = new p5((p) => {
         width = 0.425 * windowWidth;
         let canvas = p.createCanvas(width, 250);
         canvas.parent("#ft-phaseSketch");
-        canvas.style("margin-bottom", "1.2rem");
     };
     p.draw = function() {
         p.background(0);
@@ -668,6 +672,8 @@ let ftPhaseSketch = new p5((p) => {
             p.line(x, 0, x, y);
         }
         p.pop();
+
+        p.noLoop();
     }
 });
 // ========================================================================================
