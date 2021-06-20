@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Fourier-Series-Visualizer</title>
+    <title>Fourier-Visualizer</title>
     <meta name="author" content="Salman Hasan">
-    <meta name="description" content="Fourier Series Visualizer">
+    <meta name="description" content="Fourier Series and Fourier Transform Visualizer">
 
     <!-- FONTS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -125,20 +125,32 @@
         <div class="parent">
             <h2>Fourier Transform Visualizer</h2>
             <div id="ft-sketch"></div>
-            <div class="ft-grid">
+            <div class="ft-sketches">
+                <div id="ft-ampSketch">
+                    <h4 class="ft-title">Amplitude Spectrum:</h4>
+                </div>
+                <div id="ft-phaseSketch">
+                    <h4 class="ft-title">Phase Spectrum:</h4>
+                </div>
+            </div>
+            <div class="ft-options">
                 <div class="ft-equation">
                     <p class="title">Fourier Transform:</p>
                     <p>\(\large{X(w)=\int_{-\infty}^{+\infty}x(t)\cdot{e^{-jwt}}dt}\)</p>
+                </div>
+                <div class="dft-equation">
                     <p class="title">Discrete Fourier Transform:</p>
                     <p>\(\large{X_k =\sum_{n=0}^{N-1}x_n\cdot{e^{-j\frac{2\pi}{N}kn}}}\)</p>
                 </div>
-                <div class="ft-options">
+                <div class="upload-path">
                     <p class="title">Upload Path:</p>
                     <label class="file">
                         <input id="ft-file-upload" type="file" accept="application/json">
                         <span id="ft-file-text" class="file-custom" data-text="Choose file..."></span>
                     </label>
                     <button id="ft-set-path" class="u-full-width">Set Path</button>
+                </div>
+                <div class="gen-noise">
                     <p class="title">Generate Random Signal:</p>
                     <button id="ft-gen" class="u-full-width">Generate</button>
                 </div>

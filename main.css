@@ -329,7 +329,7 @@ p {
     margin-top: 41px;
 }
 
-.ft-grid {
+.ft-sketches {
     width: 90%;
     display: grid;
     grid-auto-columns: 1fr;
@@ -337,15 +337,56 @@ p {
     grid-template-rows: 1fr;
     gap: 0px 0px;
     grid-template-areas:
-        "ft-equation ft-options";
+        "ft-ampSketch ft-phaseSketch";
+}
+
+#ft-ampSketch {
+    grid-area: ft-ampSketch;
+}
+
+#ft-phaseSketch {
+    grid-area: ft-phaseSketch;
+}
+
+.ft-sketches {
+    grid-template-columns: 1fr 1fr;
+}
+
+.ft-options {
+    width: 90%;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "ft-equation dft-equation upload-path gen-noise";
 }
 
 .ft-equation {
     grid-area: ft-equation;
 }
 
-.ft-options {
-    grid-area: ft-options;
+.dft-equation {
+    grid-area: dft-equation;
+}
+
+.upload-path {
+    grid-area: upload-path;
+    margin-right: 2rem;
+}
+
+.gen-noise {
+    grid-area: gen-noise;
+}
+
+.ft-title {
+    text-decoration: underline;
+    margin-bottom: 1.5rem;
+}
+
+#ft-set-path {
+    margin-bottom: 0rem;
 }
 
 /*

@@ -54,6 +54,7 @@ function setup() {
      */
     $("#view-2").css("left", $("#wrapper").width()).css("display", "flex");
     $("#switch-container").data("toggleNumber", false);
+    $("#ft-phaseSketch").css("margin-left", "auto");
 
     // Initializes some values.
     t = 0;
@@ -247,6 +248,8 @@ function eventHandlers() {
         ftSketch.fourierX = dft(xt);
         ftSketch.local_wave = [];
         ftSketch.local_t = 0;
+        ftAmpSketch.loop();
+        ftPhaseSketch.loop();
     });
 }
 
@@ -288,13 +291,22 @@ let ampSketch = new p5((p) => {
         p.background(218);
         p.translate(20, 280);
 
-        // Draws the axis
+        // Draw The Axis.
         p.push();
         p.line(0, 0, p.width - 35, 0);
         p.line(0, 0, 0, -270);
         p.fill(0);
         p.triangle(-10, -250, 0, -270, 10, -250);
         p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
+        p.pop();
+
+        // Draw The Units.
+        p.push();
+        p.textSize(18);
+        p.text("2|C |", 15, -254);
+        p.text("f", p.width - 56, -15);
+        p.textSize(12);
+        p.text("n", 46, -250);
         p.pop();
 
         // Draw The Amplitudes.
@@ -313,7 +325,7 @@ let ampSketch = new p5((p) => {
         }
         p.pop();
 
-        // Draw the note.
+        // Draw The Note.
         p.push();
         p.textSize(18);
         let str = "Note: This is the Amp = 2|Cn|";
@@ -336,7 +348,7 @@ let phaseSketch = new p5((p) => {
         p.background(218);
         p.translate(30, 280);
 
-        // Draws the axis
+        // Draw The Axis.
         p.push();
         p.line(0, 0, p.width - 35, 0);
         p.line(0, 0, 0, -270);
@@ -345,7 +357,7 @@ let phaseSketch = new p5((p) => {
         p.triangle(p.width - 55, 10, p.width - 35, 0, p.width - 55, -10);
         p.pop();
 
-        // Draw The Scale
+        // Draw The Scale.
         p.push();
         p.line(0, -60, 5, -60);
         p.line(0, -120, 5, -120);
@@ -360,6 +372,15 @@ let phaseSketch = new p5((p) => {
         p.text("π", -13, -173);
         p.text("_\n2", -25, -182);
         p.text("2π", -25, -230);
+        p.pop();
+
+        // Draw The Units.
+        p.push();
+        p.textSize(18);
+        p.text("ϕ", 15, -254);
+        p.text("f", p.width - 56, -15);
+        p.textSize(12);
+        p.text("n", 28, -249);
         p.pop();
 
         // Draw The Phase Differences.
@@ -427,15 +448,20 @@ let ftSketch = new p5((p) => {
 
     p.setup = function() {
         width = 0.9 * windowWidth;
-        let canvas = p.createCanvas(width, 400);
+        let canvas = p.createCanvas(width, 300);
         canvas.parent("#ft-sketch");
+        canvas.style("margin-bottom", "1rem");
 
         local_t = 0;
-        local_A = 100;
-        local_cx = 300;
-        local_cy = height / 2;
+        local_A = 80;
+        local_cx = 200;
+        local_cy = p.height / 2;
 
-        genSignal(xt);
+        let val = 0;
+        for (let i = 0; i < 238; i++) {
+            xt[i] = 100 * cos(val);
+            val += 0.08;
+        }
         p.fourierX = dft(xt);
         p.noLoop();
     };
@@ -473,8 +499,8 @@ let ftSketch = new p5((p) => {
 
         // appends the y value to list.
         p.local_wave.unshift(y);
-        if (p.local_wave.length > 1100) {
-            p.local_wave.pop(); // wave's max size is 1100.
+        if (p.local_wave.length > 1200) {
+            p.local_wave.pop(); // wave's max size is 1200.
         }
 
         let offset = 2 * local_A + 100;
@@ -551,6 +577,103 @@ function setFTPath() {
         ftSketch.fourierX = dft(drawing);
         ftSketch.local_wave = [];
         ftSketch.local_t = 0;
+        ftAmpSketch.loop();
+        ftPhaseSketch.loop();
     }
 }
+// ========================================================================================
+
+// ANCHOR: FT Amplitude Sketch. 
+// ========================================================================================
+let ftAmpSketch = new p5((p) => {
+    p.setup = function() {
+        width = 0.425 * windowWidth;
+        let canvas = p.createCanvas(width, 250);
+        canvas.parent("#ft-ampSketch");
+        canvas.style("margin-bottom", "1rem");
+    };
+    p.draw = function() {
+        p.background(0);
+        p.translate(p.width / 2, p.height - 20);
+        p.stroke(255);
+
+        // Draw The Axis.
+        p.push();
+        p.strokeWeight(2);
+        p.line(-p.width / 2, 0, p.width / 2, 0);
+        p.line(0, 0, 0, -p.height + 30);
+        p.line(-10, -p.height + 45, 0, -p.height + 30);
+        p.line(+10, -p.height + 45, 0, -p.height + 30);
+        p.pop();
+
+        let amps = ftSketch.fourierX.map(elt => elt.amp);
+        let minAmp = min(amps);
+        let maxAmp = max(amps);
+
+        // Draw The Amplitudes.
+        p.push();
+        p.strokeWeight(4);
+        p.stroke("#FF41FF");
+        for (let i = 1; i < amps.length; i++) {
+            let x = p.map(i, 1, amps.length, -p.width / 2 + 25, p.width / 2 - 25);
+            let y = p.map(amps[i], minAmp, maxAmp, 0, p.height - 100);
+            p.line(x, 0, x, -y);
+        }
+        let initial = p.map(amps[0], minAmp, maxAmp, 0, p.height - 100);
+        p.line(0, 0, 0, -initial);
+        p.pop();
+
+        p.noLoop();
+    }
+});
+// ========================================================================================
+
+// ANCHOR: FT Phase Sketch. 
+// ========================================================================================
+let ftPhaseSketch = new p5((p) => {
+    p.setup = function() {
+        width = 0.425 * windowWidth;
+        let canvas = p.createCanvas(width, 250);
+        canvas.parent("#ft-phaseSketch");
+    };
+    p.draw = function() {
+        p.background(0);
+        p.translate(p.width / 2, p.height / 2);
+        p.stroke(255);
+
+        // Draw The Axis.
+        p.push();
+        p.strokeWeight(2);
+        p.line(-(p.width / 2), 0, (p.width / 2), 0);
+        p.line(0, (p.height / 2), 0, -(p.height / 2));
+        p.line(p.width - 35, -10, p.width - 25, 0);
+        p.line(p.width - 35, +10, p.width - 25, 0);
+        p.pop();
+
+        // Draw The Scale.
+        p.push();
+        p.line(0, -(p.height / 8), 5, -(p.height / 8));
+        p.line(0, -(p.height / 4), 5, -(p.height / 4));
+        p.line(0, -(3 * p.height / 8), 5, -(3 * p.height / 8));
+
+        p.line(0, (p.height / 8), 5, (p.height / 8));
+        p.line(0, (p.height / 4), 5, (p.height / 4));
+        p.line(0, (3 * p.height / 8), 5, (3 * p.height / 8));
+        p.pop();
+
+        let phases = ftSketch.fourierX.map(elt => elt.phase);
+
+        p.push();
+        p.strokeWeight(4);
+        p.stroke(colors.blue);
+        for (let i = 0; i < phases.length; i++) {
+            let x = p.map(i, 0, phases.length, -(p.width / 2) + 25, (p.width / 2) - 25);
+            let y = p.map(phases[i], 0, p.TWO_PI, 0, -(p.height / 2));
+            p.line(x, 0, x, y);
+        }
+        p.pop();
+
+        p.noLoop();
+    }
+});
 // ========================================================================================
