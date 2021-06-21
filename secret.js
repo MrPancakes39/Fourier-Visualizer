@@ -12,6 +12,9 @@ $("#switch-container").click(() => {
 
         $("#view-1").hide();
         $("#view-2").css("display", "flex");
+
+        secret1.noLoop();
+        secret2.loop();
     } else {
         // Switches the highlighted part of the switch.
         toggleContainer.css("clipPath", "inset(0 50% 0 0)");
@@ -19,6 +22,9 @@ $("#switch-container").click(() => {
 
         $("#view-2").hide();
         $("#view-1").show();
+
+        secret1.loop();
+        secret2.noLoop();
     }
 });
 
@@ -76,6 +82,18 @@ function eventHandlers() {
     });
 
     $("#show-amps").click(() => secret1.showAmp = !secret1.showAmp);
+
+    $("#play-once").click(() => {
+        secret2.repeat = false;
+        $("#play-once").attr("class", "button-primary");
+        $("#play-forever").attr("class", "");
+    });
+    $("#play-forever").click(() => {
+        secret2.repeat = true;
+        secret2.loop();
+        $("#play-once").attr("class", "");
+        $("#play-forever").attr("class", "button-primary");
+    });
 }
 
 class Complex {
@@ -143,13 +161,13 @@ let secret2 = new p5((p) => {
         return { x, y };
     }
 
-    let local_A, local_speed;
-    let local_cx, local_cy;
+    let local_speed;
 
     let st = [];
     p.local_t = 0;
     p.fourierS = [];
     p.path = [];
+    p.repeat = true;
 
     p.setup = function() {
         p.width = 0.9 * p.windowWidth;
@@ -161,17 +179,20 @@ let secret2 = new p5((p) => {
         local_cx = 200;
         local_cy = p.height / 2;
 
-        let val = 0;
-        for (let i = 0; val <= p.TWO_PI; i += 10) {
-            st.push(new Complex(100 * p.cos(val), 100 * p.sin(val)));
-            val += 0.08;
+        let drawWidth = drawingSize[0];
+        let drawHeight = drawingSize[1];
+        let drawScale = p.height / drawHeight;
+
+        for (let i = 0; i < drawing.length; i += 3) {
+            let x = -drawing[i].x + drawWidth / 2;
+            let y = drawing[i].y - drawHeight / 2;
+            st.unshift(new Complex(drawScale * x, drawScale * y));
         }
 
         p.fourierS = dft(st);
 
         p.fourierS.sort((a, b) => b.amp - a.amp);
-
-        $("#switch-container").click();
+        p.noLoop();
     };
 
     p.draw = function() {
@@ -198,6 +219,8 @@ let secret2 = new p5((p) => {
         if (p.local_t < -p.TWO_PI) {
             p.local_t = 0;
             p.path = [];
+            if (!p.repeat)
+                p.noLoop();
         }
     };
 });
