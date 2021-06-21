@@ -202,9 +202,8 @@ let secret2 = new p5((p) => {
         let v = epicycles(p.width / 2, p.height / 2, -p.HALF_PI, p.fourierS);
         p.path.unshift(v);
 
-        p.stroke(0);
-        // draws the wave.
         p.push();
+        p.stroke(0);
         p.strokeWeight(2);
         p.noFill();
         p.beginShape();
@@ -212,6 +211,13 @@ let secret2 = new p5((p) => {
             p.vertex(p.path[i].x, p.path[i].y);
         }
         p.endShape();
+        p.pop();
+
+        p.push();
+        p.fill(0);
+        p.noStroke();
+        p.textSize(14);
+        p.text("Logo Design By Danielle Salloum", p.width - 235, p.height - 5);
         p.pop();
 
         local_speed = p.TWO_PI / p.fourierS.length;
