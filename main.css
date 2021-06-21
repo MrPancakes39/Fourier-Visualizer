@@ -453,3 +453,49 @@ p {
 .file input:focus~.file-custom {
     box-shadow: 0 0 0 .075rem #fff, 0 0 0 .2rem #0074d9;
 }
+
+.go-back {
+    color: #000;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    padding-left: 15px;
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    text-decoration: none;
+}
+
+.go-back::before,
+.go-back::after {
+    content: "";
+    display: block;
+    top: 5px;
+    left: 0px;
+    position: absolute;
+    transition: left 0.1s;
+}
+
+.go-back::before {
+    border-color: #000;
+    border-style: solid;
+    border-width: 0 0 2px 2px;
+    height: 6px;
+    margin-top: -3px;
+    width: 6px;
+
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.go-back::after {
+    background: #000;
+    height: 2px;
+    width: 11px;
+}
+
+.go-back:hover::before,
+.go-back:hover::after {
+    left: -3px;
+}
