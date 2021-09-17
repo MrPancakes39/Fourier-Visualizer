@@ -614,8 +614,13 @@ let ftAmpSketch = new p5((p) => {
         p.push();
         p.strokeWeight(4);
         p.stroke("#FF41FF");
-        for (let i = 1; i < amps.length; i++) {
-            let x = p.map(i, 1, amps.length, -p.width / 2 + 25, p.width / 2 - 25);
+        for (let i = 1; i < amps.length / 2; i++) {
+            let x = p.map(i, 1, amps.length, 0, p.width - 25);
+            let y = p.map(amps[i], minAmp, maxAmp, 0, p.height - 100);
+            p.line(x, 0, x, -y);
+        }
+        for (let i = amps.length / 2; i < amps.length; i++) {
+            let x = p.map(i, 1, amps.length, -p.width + 25, 0);
             let y = p.map(amps[i], minAmp, maxAmp, 0, p.height - 100);
             p.line(x, 0, x, -y);
         }
