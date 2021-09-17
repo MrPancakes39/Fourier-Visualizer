@@ -471,7 +471,7 @@ p {
 .go-back::after {
     content: "";
     display: block;
-    top: 5px;
+    top: 7px;
     left: 0px;
     position: absolute;
     transition: left 0.1s;
