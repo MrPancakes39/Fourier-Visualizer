@@ -30,7 +30,7 @@ $("#switch-container").click(() => {
 
 let secret1 = new p5((p) => {
     p.preload = function() {
-        sound = p.loadSound("test/MBB_Beach.mp3");
+        sound = p.loadSound("samples/songs/Beach.mp3");
     }
 
     p.showAmp = false;
