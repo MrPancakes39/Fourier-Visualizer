@@ -163,7 +163,7 @@ let secret2 = new p5((p) => {
 
     let local_speed;
 
-    let st = [];
+    p.st = [];
     p.local_t = 0;
     p.fourierS = [];
     p.path = [];
@@ -186,10 +186,14 @@ let secret2 = new p5((p) => {
         for (let i = 0; i < drawing.length; i += 3) {
             let x = -drawing[i].x + drawWidth / 2;
             let y = drawing[i].y - drawHeight / 2;
-            st.unshift(new Complex(drawScale * x, drawScale * y));
+            p.st.unshift(new Complex(drawScale * x, drawScale * y));
         }
+        let lastIndex = drawing.length - 1;
+        let x = -drawing[lastIndex].x + drawWidth / 2;
+        let y = drawing[lastIndex].y - drawHeight / 2;
+        p.st.unshift(new Complex(drawScale * x, drawScale * y));
 
-        p.fourierS = dft(st);
+        p.fourierS = dft(p.st);
 
         p.fourierS.sort((a, b) => b.amp - a.amp);
         p.noLoop();
