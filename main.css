@@ -509,3 +509,47 @@ p {
     text-decoration: none;
     font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols';
 }
+
+.solo {
+    grid-area: solo;
+}
+
+.multi {
+    grid-area: multi;
+}
+
+.voice {
+    grid-area: voice;
+}
+
+.secret1 {
+    width: 95%;
+    height: 100%;
+    margin-bottom: 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px 20px;
+    grid-template-areas:
+        "solo multi"
+        "voice voice";
+}
+
+.secret1 iframe {
+    border: none;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.secret1>div {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    margin: auto;
+}
+
+.buttons>button {
+    margin: .5rem 0;
+}
