@@ -471,7 +471,7 @@ p {
 .go-back::after {
     content: "";
     display: block;
-    top: 5px;
+    top: 7px;
     left: 0px;
     position: absolute;
     transition: left 0.1s;
@@ -498,4 +498,14 @@ p {
 .go-back:hover::before,
 .go-back:hover::after {
     left: -3px;
+}
+
+.secret {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 2rem;
+    margin-left: 5px;
+    text-decoration: none;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols';
 }
