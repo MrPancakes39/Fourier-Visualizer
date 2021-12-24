@@ -25,7 +25,6 @@ $("#switch-container").click(() => {
         $("#view-2").hide();
         $("#view-1").show();
 
-        songs.forEach(song => eval(`${song}Win.sound.loop()`));
         secret2.noLoop();
     }
 });
@@ -160,6 +159,10 @@ let secret2 = new p5((p) => {
         p.fourierS.sort((a, b) => b.amp - a.amp);
         p.noLoop();
     };
+
+    p.windowResized = function () {
+        p.resizeCanvas(0.9 * p.windowWidth, 600);
+    }
 
     p.draw = function() {
         p.background(218);

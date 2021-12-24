@@ -62,6 +62,10 @@ function setup() {
     cy = height / 2;
 }
 
+function windowResized() {
+    resizeCanvas(0.9 * windowWidth, 400);
+}
+
 function draw() {
     background(218);
 
@@ -281,11 +285,15 @@ function resetSliders() {
 // ========================================================================================
 let ampSketch = new p5((p) => {
     p.setup = function() {
-        width = 0.9 * windowWidth;
+        width = 0.9 * p.windowWidth;
         let canvas = p.createCanvas(width, 300);
         canvas.parent("#amp-sketch");
         canvas.style("margin-bottom", "1.5rem");
     };
+
+    p.windowResized = function() {
+        p.resizeCanvas(0.9 * p.windowWidth, 300);
+    }
 
     p.draw = function() {
         p.background(218);
@@ -339,10 +347,14 @@ let ampSketch = new p5((p) => {
 // ========================================================================================
 let phaseSketch = new p5((p) => {
     p.setup = function() {
-        width = 0.9 * windowWidth;
+        width = 0.9 * p.windowWidth;
         let canvas = p.createCanvas(width, 300);
         canvas.parent("#phase-sketch");
     };
+
+    p.windowResized = function() {
+        p.resizeCanvas(0.9 * p.windowWidth, 300);
+    }
 
     p.draw = function() {
         p.background(218);
@@ -447,7 +459,7 @@ let ftSketch = new p5((p) => {
     p.local_wave = [];
 
     p.setup = function() {
-        width = 0.9 * windowWidth;
+        width = 0.9 * p.windowWidth;
         let canvas = p.createCanvas(width, 300);
         canvas.parent("#ft-sketch");
         canvas.style("margin-bottom", "1rem");
@@ -465,6 +477,10 @@ let ftSketch = new p5((p) => {
         p.fourierX = dft(xt);
         p.noLoop();
     };
+
+    p.windowResized = function() {
+        p.resizeCanvas(0.9 * p.windowWidth, 300);
+    }
 
     p.draw = function() {
         p.background(0);
@@ -587,11 +603,14 @@ function setFTPath() {
 // ========================================================================================
 let ftAmpSketch = new p5((p) => {
     p.setup = function() {
-        width = 0.425 * windowWidth;
+        width = 0.425 * p.windowWidth;
         let canvas = p.createCanvas(width, 250);
         canvas.parent("#ft-ampSketch");
         canvas.style("margin-bottom", "1rem");
     };
+    p.windowResized = function() {
+        p.resizeCanvas(0.425 * p.windowWidth, 250);
+    }
     p.draw = function() {
         p.background(0);
         p.translate(p.width / 2, p.height - 20);
@@ -637,10 +656,13 @@ let ftAmpSketch = new p5((p) => {
 // ========================================================================================
 let ftPhaseSketch = new p5((p) => {
     p.setup = function() {
-        width = 0.425 * windowWidth;
+        width = 0.425 * p.windowWidth;
         let canvas = p.createCanvas(width, 250);
         canvas.parent("#ft-phaseSketch");
     };
+    p.windowResized = function() {
+        p.resizeCanvas(0.425 * p.windowWidth, 250);
+    }
     p.draw = function() {
         p.background(0);
         p.translate(p.width / 2, p.height / 2);

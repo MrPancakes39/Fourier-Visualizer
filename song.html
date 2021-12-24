@@ -51,6 +51,10 @@
                 sound.amp(0.2);
             }
 
+            p.windowResized = function () {
+                p.resizeCanvas(p.windowWidth, p.windowHeight);
+            }
+
             p.draw = function () {
                 p.background(0);
 
