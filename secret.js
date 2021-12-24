@@ -1,3 +1,5 @@
+const songs = ["solo", "multi", "voice"];
+
 $("#switch-container").click(() => {
     let toggleContainer = $("#toggle-container");
     let toggleNumber = $(this).data("toggleNumber");
@@ -13,7 +15,7 @@ $("#switch-container").click(() => {
         $("#view-1").hide();
         $("#view-2").css("display", "flex");
 
-        secret1.noLoop();
+        songs.forEach(song => eval(`${song}Win.sound.pause()`));
         secret2.loop();
     } else {
         // Switches the highlighted part of the switch.
@@ -23,65 +25,24 @@ $("#switch-container").click(() => {
         $("#view-2").hide();
         $("#view-1").show();
 
-        secret1.loop();
         secret2.noLoop();
     }
 });
 
-let secret1 = new p5((p) => {
-    p.preload = function() {
-        sound = p.loadSound("test/MBB_Beach.mp3");
-    }
-
-    p.showAmp = false;
-
-    p.setup = function() {
-        p.width = 0.9 * p.windowWidth;
-        let cnv = p.createCanvas(p.width, 400);
-        cnv.parent("#secret1");
-        fft = new p5.FFT();
-        sound.amp(0.2);
-
-        eventHandlers();
-    }
-
-    p.draw = function() {
-        p.background(0);
-
-        if (p.showAmp) {
-            let spectrum = fft.analyze();
-            p.noStroke();
-            p.fill(255, 0, 255);
-            for (let i = 0; i < spectrum.length; i++) {
-                let x = p.map(i, 0, spectrum.length, 0, p.width);
-                let h = -p.height + p.map(spectrum[i], 0, 255, p.height, 0);
-                p.rect(x, p.height, p.width / spectrum.length, h)
-            }
-        }
-
-        let waveform = fft.waveform();
-        p.noFill();
-        p.beginShape();
-        p.stroke(255);
-        for (let i = 0; i < waveform.length; i++) {
-            let x = p.map(i, 0, waveform.length, 0, p.width);
-            let y = p.map(waveform[i], -1, 1, 0, p.height);
-            p.vertex(x, y);
-        }
-        p.endShape();
-    }
-});
-
 function eventHandlers() {
-    $("#play-sound").click(() => {
-        if (sound.isPlaying()) {
-            sound.pause();
-        } else {
-            sound.loop();
-        }
+    songs.forEach(song => {
+        eval(`
+        ${song}Win = $(".${song} iframe")[0].contentWindow;
+        $(".${song} .play-sound").click(() => {
+            if (${song}Win.sound.isPlaying()) {
+                ${song}Win.sound.pause();
+            } else {
+                ${song}Win.sound.loop();
+            }
+        });
+        `);
+        eval(`$(".${song} .show-amps").click(() => ${song}Win.sketch.showAmp = !${song}Win.sketch.showAmp);`);
     });
-
-    $("#show-amps").click(() => secret1.showAmp = !secret1.showAmp);
 
     $("#play-once").click(() => {
         secret2.repeat = false;
@@ -163,7 +124,7 @@ let secret2 = new p5((p) => {
 
     let local_speed;
 
-    let st = [];
+    p.st = [];
     p.local_t = 0;
     p.fourierS = [];
     p.path = [];
@@ -186,14 +147,22 @@ let secret2 = new p5((p) => {
         for (let i = 0; i < drawing.length; i += 3) {
             let x = -drawing[i].x + drawWidth / 2;
             let y = drawing[i].y - drawHeight / 2;
-            st.unshift(new Complex(drawScale * x, drawScale * y));
+            p.st.unshift(new Complex(drawScale * x, drawScale * y));
         }
+        let lastIndex = drawing.length - 1;
+        let x = -drawing[lastIndex].x + drawWidth / 2;
+        let y = drawing[lastIndex].y - drawHeight / 2;
+        p.st.unshift(new Complex(drawScale * x, drawScale * y));
 
-        p.fourierS = dft(st);
+        p.fourierS = dft(p.st);
 
         p.fourierS.sort((a, b) => b.amp - a.amp);
         p.noLoop();
     };
+
+    p.windowResized = function () {
+        p.resizeCanvas(0.9 * p.windowWidth, 600);
+    }
 
     p.draw = function() {
         p.background(218);

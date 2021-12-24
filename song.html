@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Instrument</title>
+    <!-- FONTS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="../libs/normalize.css">
+    <link rel="stylesheet" href="../libs/skeleton.css">
+    <link rel="stylesheet" href="../main.css">
+
+    <!-- JS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="../libs/p5.min.js"></script>
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../libs/p5.sound.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="u-full-width" id="container"></div>
+    <script>
+        let search = location.search.substring(1);
+        let params = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', (key, value) => (key === "") ? value : decodeURIComponent(value));
+        sketch = new p5((p) => {
+            p.preload = function () {
+                sound = p.loadSound(params.song);
+            }
+
+            p.showAmp = false;
+
+            p.setup = function () {
+                let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
+                cnv.parent("#container");
+                fft = new p5.FFT();
+                sound.amp(0.2);
+            }
+
+            p.windowResized = function () {
+                p.resizeCanvas(p.windowWidth, p.windowHeight);
+            }
+
+            p.draw = function () {
+                p.background(0);
+
+                if (p.showAmp) {
+                    let spectrum = fft.analyze();
+                    p.noStroke();
+                    p.fill(255, 0, 255);
+                    for (let i = 0; i < spectrum.length; i++) {
+                        let x = p.map(i, 0, spectrum.length, 0, p.width);
+                        let h = -p.height + p.map(spectrum[i], 0, 255, p.height, 0);
+                        p.rect(x, p.height, p.width / spectrum.length, h)
+                    }
+                }
+
+                let waveform = fft.waveform();
+                p.noFill();
+                p.beginShape();
+                p.stroke(255);
+                for (let i = 0; i < waveform.length; i++) {
+                    let x = p.map(i, 0, waveform.length, 0, p.width);
+                    let y = p.map(waveform[i], -1, 1, 0, p.height);
+                    p.vertex(x, y);
+                }
+                p.endShape();
+
+                p.push();
+                p.fill(255);
+                p.noStroke();
+                p.textSize(14);
+                p.text(params.title || "", 5, 17);
+                p.pop();
+            }
+        });
+    </script>
+</body>
+
+</html>
